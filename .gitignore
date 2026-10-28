@@ -1,0 +1,32 @@
+# Ambiente Virtual Python
+venv/
+env/
+ENV/
+.venv/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Variáveis de Ambiente e Segredos (NUNCA ENVIAR PRO GIT)
+.env
+.env.local
+firebase_credentials.json
+*.pem
+*.key
+
+# Configurações de Editores e IDEs (VS Code)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Cache de Testes e Cobertura
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs e Dados do Docker
+*.log
+.docker/
