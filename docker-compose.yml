@@ -1,3 +1,4 @@
+# Docker compose copiado dos códigos do professor, disponível no repositório das aulas
 services:
 
   db:
