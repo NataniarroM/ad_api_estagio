@@ -3,7 +3,7 @@ from app.config import settings
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
-# Inicialização
+# Inicialização da API
 @app.get("/")
 def home():
     return {
