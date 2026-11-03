@@ -9,7 +9,7 @@ CREATE TABLE curso (
 
 CREATE TABLE usuario (
     id_usuario INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    firebase_uid VARCHAR(128) NOT NULL UNIQUE # Conexão com autenticação do banco
+    firebase_uid VARCHAR(128) NOT NULL UNIQUE,
     id_curso INTEGER,
 
     nome VARCHAR(150) NOT NULL,
