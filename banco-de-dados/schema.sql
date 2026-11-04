@@ -1,6 +1,6 @@
 CREATE TABLE curso (
     id_curso INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL,
+    nome_curso VARCHAR(150) NOT NULL,
     nivel VARCHAR(20) NOT NULL
         CHECK (nivel IN ('tecnologo', 'bacharelado', 'licenciatura')),
     ativo BOOLEAN NOT NULL DEFAULT TRUE
@@ -12,7 +12,7 @@ CREATE TABLE usuario (
     firebase_uid VARCHAR(128) NOT NULL UNIQUE,
     id_curso INTEGER,
 
-    nome VARCHAR(150) NOT NULL,
+    nome_usuario VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
 
@@ -47,7 +47,7 @@ CREATE TABLE empresa (
     razao_social VARCHAR(150) NOT NULL,
     nome_fantasia VARCHAR(150) NOT NULL,
     cnpj VARCHAR(18) NOT NULL UNIQUE,
-    cidade VARCHAR(100) NOT NULL,
+    cidade_empresa VARCHAR(100) NOT NULL,
     site VARCHAR(255),
 
     CONSTRAINT fk_empresa_usuario
@@ -71,15 +71,15 @@ CREATE TABLE vaga (
     bolsa NUMERIC(10,2),
     carga_horaria SMALLINT NOT NULL,
 
-    cidade VARCHAR(100) NOT NULL,
+    cidade_vaga VARCHAR(100) NOT NULL,
 
     data_publicacao DATE NOT NULL DEFAULT CURRENT_DATE,
     data_limite DATE NOT NULL,
 
-    status VARCHAR(20) NOT NULL DEFAULT 'publicada'
-        CHECK (status IN ('publicada', 'encerrada', 'em andamento')),
+    status_vaga VARCHAR(20) NOT NULL DEFAULT 'publicada'
+        CHECK (status_vaga IN ('publicada', 'encerrada', 'em andamento')),
 
-    criada_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    criada_em_vaga TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_vaga_empresa
         FOREIGN KEY (id_empresa)
@@ -105,8 +105,8 @@ CREATE TABLE candidatura (
 
     data_candidatura TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    status VARCHAR(20) NOT NULL DEFAULT 'enviada'
-        CHECK (status IN (
+    status_candidatura VARCHAR(20) NOT NULL DEFAULT 'enviada'
+        CHECK (status_candidatura IN (
             'enviada',
             'em analise',
             'selecionada',
