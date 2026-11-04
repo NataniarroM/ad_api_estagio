@@ -1,5 +1,4 @@
 from unittest.mock import MagicMock, patch
-
 from fastapi.testclient import TestClient
 from firebase_admin import auth
 
