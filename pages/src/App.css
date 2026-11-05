@@ -1,304 +1,119 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f4dab2;
-  color: #1F2937;
-}
-
-.container {
+.pagina-principal {
   min-height: 100vh;
-  padding-bottom: 40px;
+  background-color: #fafaf9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1c1917;
 }
 
-/* Navbar / Cabeçalho */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 40px;
-  background-color: #ffffff;
+.secao-topo {
+  text-align: center;
+  padding: 50px 20px 40px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.brand-container {
-  display: flex;
-  align-items: center;
+.titulo-principal {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #1c1917;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
 }
 
-.brand-logo {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: #A55237;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 8px;
+.subtitulo-principal {
+  font-size: 1.05rem;
+  color: #78716c;
+  margin-bottom: 32px;
 }
 
-.brand-logo-text {
-  color: #FFFFFF;
-  font-weight: bold;
-}
-
-.brand-name {
-  font-size: 20px;
-  font-weight: bold;
-  color: #2B2B2B;
-}
-
-.brand-name-highlight {
-  color: #A55237;
-}
-
-.nav-links {
-  display: flex;
-  gap: 24px;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: #4B5563;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.nav-link:hover {
-  color: #A55237;
-}
-
-.nav-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.primary-button {
-  background-color: #A55237;
-  color: #FFFFFF;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.secondary-button {
-  background-color: transparent;
-  color: #374151;
-  border: 1px solid #D1D5DB;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* Hero Section */
-.hero-section {
-  padding: 40px 20%;
-  text-align: left;
-  background-color: #A55237;
-}
-
-.hero-title {
-  font-size: 40px;
-  font-weight: bold;
-  color: #331B18;
-  line-height: 46px;
-}
-
-.hero-subtitle {
-  font-size: 16px;
-  color: #6B7280;
-  margin-top: 12px;
-  margin-bottom: 24px;
-}
-
-/* Caixa de Pesquisa */
-.search-container {
-  background-color: #FFFFFF;
-  border-radius: 16px;
-  padding: 12px;
+.barra-pesquisa {
+  background: #ffffff;
+  border: 1px solid #d6d3d1;
+  border-radius: 14px;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  gap: 12px;
+  padding: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
-.input-wrapper {
+.grupo-input {
   display: flex;
   align-items: center;
   flex: 1;
-  padding: 4px 8px;
+  padding: 6px 14px;
 }
 
-.input-icon {
-  font-size: 16px;
-  margin-right: 8px;
+.icone-input {
+  margin-right: 10px;
+  font-size: 1rem;
 }
 
-.text-input {
-  width: 100%;
+.campo-texto {
   border: none;
   outline: none;
-  font-size: 14px;
-  color: #1F2937;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #1c1917;
   background: transparent;
 }
 
-.separator {
+.campo-texto::placeholder {
+  color: #a8a29e;
+}
+
+.separador {
   width: 1px;
-  height: 24px;
-  background-color: #E5E7EB;
+  height: 28px;
+  background-color: #e7e5e4;
 }
 
-.search-button {
-  background-color: #A55237;
-  color: #FFFFFF;
+.botao-buscar {
+  background-color: #c2410c;
+  color: #ffffff;
   border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: bold;
-  font-size: 14px;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-/* Secção de Vagas */
-.content-section {
-  padding: 20px 20%;
-  background-color: #fef8f1;
+.botao-buscar:hover {
+  background-color: #9a3412;
 }
 
-.section-header {
-  margin-bottom: 20px;
+.secao-conteudo {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 20px 24px 60px;
 }
 
-.section-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #1F2937;
+.cabecalho-secao {
+  margin-bottom: 24px;
 }
 
-.counter-badge {
-  font-size: 12px;
-  font-weight: normal;
-  color: #6B7280;
-  background-color: #E5E7EB;
-  padding: 2px 8px;
-  border-radius: 12px;
-  margin-left: 8px;
-}
-
-.jobs-grid {
- display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Cria exatamente 2 colunas iguais */
-  gap: 16px; /* Espaçamento entre os cards */
-}
-
-/* Cartões de Vaga */
-.job-card {
-  background-color: #FFFFFF;
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid #F3F4F6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  width: 500;
-  height: 200;
-}
-
-.job-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.job-info-container {
+.titulo-secao {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1c1917;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.company-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.company-avatar-text {
-  color: #FFFFFF;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.job-title {
-  font-size: 15px;
-  font-weight: bold;
-  color: #1F2937;
-}
-
-.job-company {
-  font-size: 13px;
-  color: #6B7280;
-  margin-top: 2px;
-}
-
-.bookmark-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.bookmark-icon {
-  font-size: 16px;
-}
-
-.tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.tag-item {
-  background-color: #F3F4F6;
+.badge-contador {
+  font-size: 0.75rem;
+  background-color: #ffedd5;
+  color: #c2410c;
   padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  color: #4B5563;
+  border-radius: 20px;
+  font-weight: 600;
 }
 
-.job-description {
-  font-size: 13px;
-  color: #6B7280;
-  margin-top: 12px;
-  line-height: 1.5;
-}
-
-.job-card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid #F9FAFB;
-}
-
-.job-salary {
-  font-size: 14px;
-  font-weight: bold;
-  color: #111827;
-}
-
-.job-date {
-  font-size: 12px;
-  color: #9CA3AF;
+.grade-vagas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
