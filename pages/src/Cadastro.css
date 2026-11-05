@@ -1,0 +1,180 @@
+.pagina-cadastro {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+.conteudo-cadastro {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.cartao-cadastro {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 36px;
+  width: 100%;
+  max-width: 440px;
+  border: 1px solid #e2e8f0;
+}
+
+.titulo-pagina {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.subtitulo-pagina {
+  font-size: 0.875rem;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Seletor Estudante vs Empresa */
+.seletor-tipo-conta {
+  display: flex;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.botao-tipo {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.botao-tipo.ativo {
+  background-color: #ffffff;
+  color: #c2410c;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+/* Formulário e Campos */
+.formulario-cadastro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grupo-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rotulo-campo {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.caixa-campo {
+  display: flex;
+  align-items: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.caixa-campo:focus-within {
+  border-color: #fc651a;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.icone-campo {
+  margin-right: 10px;
+  font-size: 1rem;
+}
+
+.campo-texto {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+.campo-texto::placeholder {
+  color: #94a3b8;
+}
+
+.botao-cadastrar {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #ed793a;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.botao-cadastrar:hover {
+  background-color: #c2410c;
+}
+
+.botao-cadastrar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Alertas de Sucesso e Erro */
+.mensagem-alerta {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.mensagem-alerta.sucesso {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.mensagem-alerta.erro {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.rodape-card {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.link-entrar {
+  color:#c2410c;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-entrar:hover {
+  text-decoration: underline;
+}
