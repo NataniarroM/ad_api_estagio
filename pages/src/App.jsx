@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Cabecalho from './components/Cabecalho';
 import CartaoVaga from './components/CartaoVaga';
 import './App.css';
+import lupa from './assets/lupa.png';
+import pin from './assets/pin.png';
 
 export default function App() {
   const [termoBusca, setTermoBusca] = useState('');
@@ -37,7 +39,7 @@ export default function App() {
 
         <div className="barra-pesquisa">
           <div className="grupo-input">
-            <span className="icone-input">🔍</span>
+            <img src={lupa} />
             <input
               type="text"
               className="campo-texto"
@@ -48,7 +50,7 @@ export default function App() {
           </div>
           <div className="separador" />
           <div className="grupo-input">
-            <span className="icone-input">📍</span>
+            <img src={pin} />
             <input
               type="text"
               className="campo-texto"

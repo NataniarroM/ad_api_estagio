@@ -1,5 +1,6 @@
 import React from 'react';
 import './CartaoVaga.css';
+import fav from '../assets/favoritos.png';
 
 export default function CartaoVaga({ vaga }) {
   return (
@@ -22,7 +23,7 @@ export default function CartaoVaga({ vaga }) {
           </div>
         </div>
         <button className="botao-favorito">
-          <span className="icone-favorito">🔖</span>
+          <img src={fav} />
         </button>
       </div>
 
