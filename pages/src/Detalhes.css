@@ -1,0 +1,140 @@
+.pagina-detalhes {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.container-vaga {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 800px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.botao-voltar {
+  background: none;
+  border: none;
+  color: #d9531e;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.botao-voltar:hover {
+  text-decoration: underline;
+}
+
+.cabecalho-vaga {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cabecalho-vaga h1 {
+  font-size: 26px;
+  color: #111111;
+  margin-bottom: 8px;
+}
+
+.cabecalho-vaga h2 {
+  font-size: 16px;
+  color: #555555;
+  font-weight: 500;
+}
+
+.local-vaga {
+  color: #777777;
+}
+
+.badges-vaga {
+  display: flex;
+  gap: 10px;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.badge.tipo {
+  background-color: #e6f0fa;
+  color: #0066cc;
+}
+
+.badge.bolsa {
+  background-color: #e6f9ec;
+  color: #008833;
+}
+
+.divisor {
+  border: none;
+  height: 1px;
+  background-color: #eaeaea;
+  margin: 30px 0;
+}
+
+.corpo-vaga {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.secao-info h3 {
+  font-size: 18px;
+  color: #222222;
+  margin-bottom: 10px;
+}
+
+.secao-info p, .secao-info li {
+  font-size: 15px;
+  color: #444444;
+  line-height: 1.6;
+}
+
+.secao-info ul {
+  padding-left: 20px;
+}
+
+.rodape-candidatura {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.botao-inscrever {
+  background-color: #d9531e;
+  color: #ffffff;
+  border: none;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.botao-inscrever:hover {
+  background-color: #b84317;
+}
+
+.mensagem-sucesso-inscricao {
+  background-color: #e6f9ec;
+  color: #008833;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  width: 100%;
+  text-align: center;
+}
