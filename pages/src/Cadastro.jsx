@@ -3,7 +3,7 @@ import './Cadastro.css';
 import Cabecalho from './components/Cabecalho';
 
 export default function Cadastro() {
-  const [nome, setNome] = useState('');
+  const [nome, setNome] = useState('');//criando campos e setando como vazio
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -14,7 +14,7 @@ export default function Cadastro() {
   const aoEnviarCadastro = async (e) => {
     e.preventDefault();
 
-    if (senha !== confirmarSenha) {
+    if (senha !== confirmarSenha) {//conferindo senha 
       setMensagem({ tipo: 'erro', texto: 'As senhas não coincidem.' });
       return;
     }
@@ -36,17 +36,17 @@ export default function Cadastro() {
         }),
       });
 
-      if (resposta.ok) {
+      if (resposta.ok) {//se cadastro der certo
         setMensagem({ tipo: 'sucesso', texto: 'Conta criada com sucesso!' });
         setNome('');
         setEmail('');
         setSenha('');
         setConfirmarSenha('');
       } else {
-        const dadosErro = await resposta.json();
+        const dadosErro = await resposta.json();//se os dados derem errado
         setMensagem({
           tipo: 'erro',
-          texto: dadosErro.detail || 'Erro ao realizar o cadastro.',
+          texto: dadosErro.detail || 'Erro ao realizar o cadastro.',//mensagem
         });
       }
     } catch (erro) {
@@ -74,20 +74,20 @@ export default function Cadastro() {
             <button
               type="button"
               className={`botao-tipo ${tipoConta === 'estudante' ? 'ativo' : ''}`}
-              onClick={() => setTipoConta('estudante')}
+              onClick={() => setTipoConta('estudante')}//mudaça de tipo seta, como estudante
             >
               Estudante
             </button>
             <button
               type="button"
               className={`botao-tipo ${tipoConta === 'empresa' ? 'ativo' : ''}`}
-              onClick={() => setTipoConta('empresa')}
+              onClick={() => setTipoConta('empresa')}//mudança de tipo, seta como empresa
             >
               Empresa
             </button>
           </div>
 
-          {mensagem.texto && (
+          {mensagem.texto && (// div do erro
             <div className={`mensagem-alerta ${mensagem.tipo}`}>
               {mensagem.texto}
             </div>
@@ -103,7 +103,7 @@ export default function Cadastro() {
                   className="campo-texto"
                   placeholder="Digite o seu nome"
                   value={nome}
-                  onChange={(e) => setNome(e.target.value)}
+                  onChange={(e) => setNome(e.target.value)}//campo inserir nome
                   required
                 />
               </div>
@@ -117,7 +117,7 @@ export default function Cadastro() {
                   className="campo-texto"
                   placeholder="exemplo@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}//campo inserir email
                   required
                 />
               </div>
@@ -131,7 +131,7 @@ export default function Cadastro() {
                   className="campo-texto"
                   placeholder="Mínimo de 6 caracteres"
                   value={senha}
-                  onChange={(e) => setSenha(e.target.value)}
+                  onChange={(e) => setSenha(e.target.value)}//campo inserir senha
                   required
                 />
               </div>
@@ -145,14 +145,14 @@ export default function Cadastro() {
                   className="campo-texto"
                   placeholder="Repita a sua senha"
                   value={confirmarSenha}
-                  onChange={(e) => setConfirmarSenha(e.target.value)}
+                  onChange={(e) => setConfirmarSenha(e.target.value)}//campo confirmar senha
                   required
                 />
               </div>
             </div>
 
             <button type="submit" className="botao-cadastrar" disabled={carregando}>
-              {carregando ? 'A criar conta...' : 'Cadastrar'}
+              {carregando ? 'Criando conta...' : 'Cadastrar'}
             </button>
           </form>
 
