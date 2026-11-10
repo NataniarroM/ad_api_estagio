@@ -1,0 +1,225 @@
+.pagina-perfil {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+.conteudo-perfil {
+  max-width: 1100px;
+  width: 100%;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* Cartão do Topo (Capa e Avatar) */
+.cartao-perfil-topo {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.avatar-grande {
+  width: 72px;
+  height: 72px;
+  background-color: #c2410c;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.texto-avatar-grande {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.info-usuario-topo {
+  flex: 1;
+}
+
+.nome-usuario {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.subtitulo-usuario {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.botao-editar-perfil {
+  background-color: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.botao-editar-perfil:hover {
+  background-color: #e2e8f0;
+}
+
+/* Corpo com Sidebar e Detalhes */
+.corpo-perfil {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+}
+
+.menu-lateral-perfil {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: fit-content;
+}
+
+.item-menu-perfil {
+  text-decoration: none;
+  color: #475569;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.item-menu-perfil:hover,
+.item-menu-perfil.ativo {
+  background-color: #ffedd5;
+  color: #c2410c;
+  font-weight: 600;
+}
+
+/* Secção de Detalhes */
+.detalhes-perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bloco-detalhes {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.titulo-bloco {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.grid-informacoes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rotulo-info {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.valor-info {
+  font-size: 0.95rem;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+/* Formulário de Edição Interno */
+.formulario-edicao {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grupo-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rotulo-campo {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.campo-texto {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  outline: none;
+  color: #0f172a;
+  transition: border-color 0.2s;
+}
+
+.campo-texto:focus {
+  border-color: #c2410c;
+  box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+.botao-salvar-perfil {
+  background-color: #c2410c;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.botao-salvar-perfil:hover {
+  background-color: #9a3412;
+}
+
+/* Alertas */
+.mensagem-alerta {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 20px;
+}
+
+.mensagem-alerta.sucesso {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
