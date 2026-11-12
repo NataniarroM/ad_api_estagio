@@ -6,7 +6,7 @@
 #
 # IDEIA IMPORTANTE: estes testes NÃO usam o Firebase de verdade.
 # Usamos "mocks" (peças de mentira) que fingem ser o Firebase. Assim:
-#   - os testes rodam em milissegundos, sem internet e sem credenciais;
+#   - os testes rodam em milissegundos, sem internet e ssem credenciais;
 #   - conseguimos simular situações difíceis (senha errada, e-mail repetido...);
 #   - não criamos usuários de verdade no Firebase a cada teste.
 #
