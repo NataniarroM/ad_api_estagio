@@ -12,7 +12,7 @@ CREATE TABLE usuario (
         firebase_uid VARCHAR(128) NOT NULL UNIQUE, -- Conexão com autenticação do banco
     id_curso INTEGER,
 
-    nome_usuario VARCHAR(150) NOT NULL,
+    nome VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
 

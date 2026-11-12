@@ -1,6 +1,5 @@
 # Docker compose copiado dos códigos do professor, disponível no repositório das aulas
 services:
-
   db:
     image: postgres:17
     environment:
@@ -33,6 +32,21 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  frontend:
+    image: node:20-slim
+    container_name: frontend_app
+    working_dir: /app
+    ports:
+      - "5173:5173"  
+    volumes:
+      - ./pages:/app             
+      - /app/node_modules           
+    environment:
+      - CHOKIDAR_USEPOLLING=true    
+    networks:
+      - app-network
+    command: sh -c "npm install --engine-strict=false && npm run dev -- --host 0.0.0.0"
 
 networks:
   app-network:
