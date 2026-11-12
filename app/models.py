@@ -37,7 +37,7 @@ class Empresa(Base):
                         nullable=False, unique=True)
     
     razao_social = Column(String(150), nullable=False)
-    nome_fantasia = Column(String(150, nullable=False))
+    nome_fantasia = Column(String(150), nullable=False)
     cnpj = Column(String(18), nullable=False, unique=True)
     cidade = Column(String(100), nullable=False)
     site = Column(String(255))
@@ -69,10 +69,10 @@ class Candidatura(Base):
     __tablename__ = "candidaturas"
 
     id_candidatura = Column(Integer, primary_key=True, index=True)
-    vaga_id = Column(Integer,
+    id_vaga = Column(Integer,
                      ForeignKey("vaga.id_vaga", ondelete="CASCADE"),
                      nullable=False)
-    usuario_id = Column(Integer,
+    id_usuario = Column(Integer,
                         ForeignKey("usuario.id_usuario", ondelete="CASCADE"),
                         nullable=False)
 

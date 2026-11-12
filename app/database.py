@@ -10,9 +10,9 @@ engine = create_engine(settings.DATABASE_URL)
 Sessao = sessionmaker(bind=engine)
 
 # Base de modelo API
-Base = declarative_base
+Base = declarative_base()
 
-# Não entendi também, pela documentão e pela IA parece abrir e fechar o acesso ao banco
+# Não entendi também, pela documentação e pela IA parece abrir e fechar o acesso ao banco
 def get_db():
     db = Sessao()
     try:
