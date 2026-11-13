@@ -61,8 +61,8 @@ class Vaga(Base):
     cidade = Column(String(100), nullable=False)
     data_publicacao = Column(Date, nullable=False)
     data_limite = Column(Date, nullable=False)
-    status = Column(String(20), nullable=False, default="publicada")
-    criado_em = Column(DateTime, nullable=False, server_default=func.now()) # Gerado por IA
+    status_vaga = Column(String(20), nullable=False, default="publicada")
+    criada_em = Column(DateTime, nullable=False, server_default=func.now()) # Gerado por IA
 
 class Candidatura(Base):
 

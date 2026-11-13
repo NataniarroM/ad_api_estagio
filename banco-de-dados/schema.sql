@@ -47,7 +47,7 @@ CREATE TABLE empresa (
     razao_social VARCHAR(150) NOT NULL,
     nome_fantasia VARCHAR(150) NOT NULL,
     cnpj VARCHAR(18) NOT NULL UNIQUE,
-    cidade_empresa VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
     site VARCHAR(255),
 
     CONSTRAINT fk_empresa_usuario
@@ -71,7 +71,7 @@ CREATE TABLE vaga (
     bolsa NUMERIC(10,2),
     carga_horaria SMALLINT NOT NULL,
 
-    cidade_vaga VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
 
     data_publicacao DATE NOT NULL DEFAULT CURRENT_DATE,
     data_limite DATE NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE vaga (
     status_vaga VARCHAR(20) NOT NULL DEFAULT 'publicada'
         CHECK (status_vaga IN ('publicada', 'encerrada', 'em andamento')),
 
-    criada_em_vaga TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    criada_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_vaga_empresa
         FOREIGN KEY (id_empresa)
