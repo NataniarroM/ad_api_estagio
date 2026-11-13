@@ -5,6 +5,7 @@ import Cadastro from './Cadastro'; // Confirma se o caminho e nome estão corret
 import Login from './login';
 import Perfil from './Perfil';
 import Detalhes from './detalhes'; // Com 'D' maiúsculo
+import Favoritos from './Favoritos';
 
 export default function Rotas() {
   return (
@@ -14,6 +15,7 @@ export default function Rotas() {
       <Route path="/login" element={<Login />} />
       <Route path="/perfil" element={<Perfil />} />
       <Route path="/vaga/:id" element={<Detalhes />} />
+      <Route path="/favoritos" element={<Favoritos />} />
     </Routes>
   );
 }

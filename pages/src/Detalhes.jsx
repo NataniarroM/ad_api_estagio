@@ -37,11 +37,15 @@ export default function Detalhes() {
   const handleInscricao = async () => {
     setCarregandoInscricao(true);
     try {
-      const resposta = await fetch(`http://127.0.0.1:8000/api/vagas/${id}/candidatar`, {
+      const resposta = await fetch(`http://127.0.0.1:8000/api/vagas/candidatar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          vaga_id: Number(id),
+          id_usuario: 1 // ID de usuário padrão por enquanto
+        }),
       });
 
       if (resposta.ok) {
@@ -60,7 +64,6 @@ export default function Detalhes() {
   if (carregando) {
     return (
       <div className="pagina-detalhes">
-        <Cabecalho />
         <p style={{ textAlign: 'center', marginTop: '50px', color: '#666' }}>
           A carregar detalhes da vaga...
         </p>
@@ -71,7 +74,6 @@ export default function Detalhes() {
   if (erro || !vaga) {
     return (
       <div className="pagina-detalhes">
-        <Cabecalho />
         <div className="container-vaga" style={{ textAlign: 'center', marginTop: '50px' }}>
           <p style={{ color: '#ef4444', marginBottom: '20px' }}>{erro || 'Vaga não encontrada.'}</p>
           <button className="botao-voltar" onClick={() => navigate('/')}>
@@ -84,8 +86,6 @@ export default function Detalhes() {
 
   return (
     <div className="pagina-detalhes">
-      <Cabecalho />
-
       <div className="container-vaga">
         <button className="botao-voltar" onClick={() => navigate(-1)}>
           &larr; Voltar às vagas
@@ -94,10 +94,10 @@ export default function Detalhes() {
         <div className="cabecalho-vaga">
           <div>
             <h1>{vaga.titulo}</h1>
-            <h2>{vaga.empresa} &bull; <span className="local-vaga">{vaga.local || 'Localização não informada'}</span></h2>
+            <h2>{vaga.empresa} &bull; <span className="local-vaga">{vaga.local || vaga.cidade || 'Localização não informada'}</span></h2>
           </div>
           <div className="badges-vaga">
-            <span className="badge tipo">{vaga.tipo || 'Estágio'}</span>
+            <span className="badge tipo">{vaga.tipo || vaga.modalidade || 'Estágio'}</span>
             <span className="badge bolsa">{vaga.salario || vaga.bolsa || 'A combinar'}</span>
           </div>
         </div>
