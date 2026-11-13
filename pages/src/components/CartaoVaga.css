@@ -72,6 +72,12 @@
 
 .botao-favorito:hover {
   background-color: #e7e5e4;
+  
+}
+.botao-favorito img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 
 .lista-tags {
