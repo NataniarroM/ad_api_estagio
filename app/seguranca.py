@@ -33,6 +33,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 # "auth" é a parte do Firebase que sabe conferir tokens de login.
 from firebase_admin import auth
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.models import Usuario
 
 # Cria o "caderno de anotações" da API. Usamos o mesmo do servidor (uvicorn),
 # então as mensagens aparecem no terminal onde o "docker compose up" está rodando.
@@ -73,7 +77,17 @@ def get_usuario_atual(credenciais: HTTPAuthorizationCredentials = Depends(bearer
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # "uid" é o identificador único do usuário no Firebase.
-    # É ele que o banco de dados deve guardar (coluna firebase_uid da tabela usuario).
-    # dados.get("email") evita erro caso o token venha sem e-mail.
     return {"uid": dados["uid"], "email": dados.get("email")}
+
+def get_usuario_db(
+    usuario_firebase: dict = Depends(get_usuario_atual),
+    db: Session = Depends(get_db),
+) -> Usuario:
+    #Valida o token no Firebase e busca o registro correspondente na tabela usuario.
+    usuario = db.query(Usuario).filter(Usuario.firebase_uid == usuario_firebase["uid"]).first()
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuário autenticado no Firebase, mas não cadastrado no banco de dados.",
+        )
+    return usuario

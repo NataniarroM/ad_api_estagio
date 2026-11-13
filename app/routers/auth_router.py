@@ -1,22 +1,4 @@
-# ---------------------------------------------------------------------------
-# auth_router.py
-#
-# Aqui ficam os 3 endpoints de autenticação da API:
-#
-#   POST /auth/cadastro  -> cria um usuário novo no Firebase
-#   POST /auth/login     -> confere e-mail e senha e devolve um TOKEN
-#   GET  /auth/me        -> endpoint protegido; mostra quem está logado
-#
-# Fluxo completo, do ponto de vista do front-end:
-#   1. O usuário se cadastra em /auth/cadastro.
-#   2. O usuário faz login em /auth/login e recebe um "access_token".
-#   3. Nas próximas requisições, o front-end envia esse token no cabeçalho:
-#          Authorization: Bearer <token>
-#   4. Os endpoints protegidos conferem o token (ver app/seguranca.py).
-# ---------------------------------------------------------------------------
-
-# "requests" é a biblioteca para a nossa API fazer chamadas HTTP a outros sites.
-# Aqui ela é usada para falar com o Firebase no login.
+from typing import Optional
 import requests
 
 # APIRouter: agrupa endpoints relacionados (como uma "mini-API" dentro da API).
@@ -27,18 +9,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 # "auth" do Firebase Admin: sabe criar usuários e conferir tokens.
 from firebase_admin import auth
-
-# BaseModel: base para criar "modelos" que descrevem e validam os dados recebidos.
-# Field: permite definir regras para cada campo (tamanho mínimo, formato...).
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 # Configurações do projeto (lidas do .env).
 from app.config import settings
-
-# Função que diz se a conexão com o Firebase está ativa.
-from app.firebase_config import firebase_iniciado
-
-# O "porteiro" que confere o token (usado no endpoint /auth/me).
+from app.database import get_db
+from app.models import Usuario
 from app.seguranca import get_usuario_atual
 
 # Cria o grupo de rotas.
@@ -46,22 +24,9 @@ from app.seguranca import get_usuario_atual
 #   tags=[...]      -> agrupa os endpoints sob esse nome na documentação (/docs)
 router = APIRouter(prefix="/auth", tags=["Autenticação"])
 
-# Endereço da API do Firebase que confere e-mail e senha e devolve o token.
-# Usamos o endereço REST porque a biblioteca firebase_admin NÃO consegue
-# conferir senha: ela só serve para tarefas de administrador (criar usuário, etc.).
 URL_LOGIN_FIREBASE = (
     "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword"
 )
-
-# Regra (expressão regular) para conferir se um e-mail tem formato válido.
-# Em português: "texto" + "@" + "texto" + "." + "texto", sem espaços.
-#   ^           começo do texto
-#   [^@\s]+     um ou mais caracteres que não sejam "@" nem espaço
-#   @           a arroba
-#   [^@\s]+     um ou mais caracteres que não sejam "@" nem espaço
-#   \.          um ponto
-#   [^@\s]+     um ou mais caracteres que não sejam "@" nem espaço
-#   $           fim do texto
 PADRAO_EMAIL = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
 
 # Códigos de erro que o Firebase devolve quando o problema é e-mail ou senha errados.
@@ -79,10 +44,18 @@ ERROS_DE_LOGIN = (
 # automaticamente, sem executar o código do endpoint.
 
 class CadastroEntrada(BaseModel):
-    """Dados que o front-end precisa enviar para cadastrar um usuário."""
-    nome: str = Field(min_length=2, max_length=100)   # entre 2 e 100 letras
-    email: str = Field(pattern=PADRAO_EMAIL)          # precisa ter formato de e-mail
-    senha: str = Field(min_length=6, max_length=100)  # mínimo 6 (exigência do Firebase)
+    nome: str = Field(min_length=2, max_length=150)
+    email: str = Field(pattern=PADRAO_EMAIL)
+    senha: str = Field(min_length=6, max_length=100)
+    tipo_usuario: str = Field(default="estudante", pattern="^(estudante|empresa|admin)$")
+    id_curso: Optional[int] = None
+    telefone: Optional[str] = Field(default=None, max_length=20)
+    semestre: Optional[int] = Field(default=None, gt=0)
+
+    @field_validator("id_curso", "semestre", mode="before")
+    @classmethod
+    def converter_zero_para_none(cls, valor):
+        return None if valor == 0 else valor
 
 
 class LoginEntrada(BaseModel):
@@ -96,22 +69,10 @@ class LoginEntrada(BaseModel):
 # @router.post -> o endpoint responde a requisições do tipo POST, no caminho /auth/cadastro.
 # status_code=201 -> código de sucesso para "algo foi criado".
 @router.post("/cadastro", status_code=status.HTTP_201_CREATED)
-def cadastrar(dados: CadastroEntrada):
-    """Cria um usuário no Firebase. A senha fica guardada de forma segura por lá."""
-
-    # Antes de tentar, confere se a API está conectada ao Firebase.
-    # Se não estiver (falta o firebase_credentials.json), avisa com clareza.
-    # 503 significa "serviço indisponível".
-    if not firebase_iniciado():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Firebase não configurado no servidor (falta o firebase_credentials.json)",
-        )
-
+def cadastrar(dados: CadastroEntrada, db: Session = Depends(get_db)):
+    """Cria um usuário no Firebase e sincroniza o perfil na tabela usuario do PostgreSQL."""
     try:
-        # Pede ao Firebase para criar o usuário.
-        # O Firebase guarda a senha criptografada; nós nunca a armazenamos.
-        usuario = auth.create_user(
+        usuario_fb = auth.create_user(
             email=dados.email,
             password=dados.senha,
             display_name=dados.nome,
@@ -133,11 +94,40 @@ def cadastrar(dados: CadastroEntrada):
         # Não mostramos o erro real ao usuário para não vazar informação interna.
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Erro ao criar o usuário",
+            detail="Erro ao criar o usuário no Firebase",
         )
 
-    # Devolve os dados do usuário criado. NUNCA devolvemos a senha.
-    return {"uid": usuario.uid, "email": usuario.email, "nome": usuario.display_name}
+    novo_usuario_db = Usuario(
+        firebase_uid=usuario_fb.uid,
+        id_curso=dados.id_curso,
+        nome=dados.nome,
+        email=dados.email,
+        senha_hash="GERENCIADO_PELO_FIREBASE",
+        tipo_usuario=dados.tipo_usuario,
+        telefone=dados.telefone,
+        semestre=dados.semestre,
+        aluno=(dados.tipo_usuario == "estudante"),
+    )
+
+    db.add(novo_usuario_db)
+    try:
+        db.commit()
+        db.refresh(novo_usuario_db)
+    except IntegrityError:
+        db.rollback()
+        auth.delete_user(usuario_fb.uid)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Erro ao salvar usuário no banco (e-mail duplicado ou id_curso inexistente).",
+        )
+
+    return {
+        "id_usuario": novo_usuario_db.id_usuario,
+        "uid": usuario_fb.uid,
+        "email": novo_usuario_db.email,
+        "nome": novo_usuario_db.nome,
+        "tipo_usuario": novo_usuario_db.tipo_usuario,
+    }
 
 
 # ---------- ENDPOINT 2: LOGIN ----------
@@ -216,9 +206,4 @@ def login(dados: LoginEntrada):
 @router.get("/me")
 def meu_perfil(usuario: dict = Depends(get_usuario_atual)):
     """Endpoint protegido: só responde se o token for válido."""
-
-    # Depends(get_usuario_atual) roda o "porteiro" antes deste código.
-    # Se o token for inválido, a função abaixo nem chega a ser executada
-    # (o porteiro já respondeu 401).
-    # Se for válido, "usuario" já chega preenchido com o uid e o e-mail.
     return usuario

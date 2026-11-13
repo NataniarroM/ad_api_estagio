@@ -4,14 +4,25 @@ from sqlalchemy.exc import IntegrityError
 from typing import List
 
 from app.database import get_db
-from app.models import Empresa
+from app.models import Empresa, Usuario
 from app.schemas import EmpresaCreate, EmpresaResponse
+from app.seguranca import get_usuario_db
 
 router = APIRouter(prefix="/empresas", tags=["Empresas"])
 
 @router.post("/", response_model=EmpresaResponse, status_code=status.HTTP_201_CREATED)
-def criar_empresa(empresa: EmpresaCreate, db: Session = Depends(get_db)):
-    nova_empresa = Empresa(**empresa.model_dump())
+def criar_empresa(
+    dados: EmpresaCreate,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_usuario_db)
+):
+    if usuario.tipo_usuario != "empresa":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Apenas usuários do tipo 'empresa' podem cadastrar dados empresariais."
+        )
+
+    nova_empresa = Empresa(id_usuario=usuario.id_usuario, **dados.model_dump())
     db.add(nova_empresa)
     try:
         db.commit()
@@ -21,7 +32,7 @@ def criar_empresa(empresa: EmpresaCreate, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Erro de integridade: verifique se o id_usuario existe, se já não possui empresa vinculada ou se o CNPJ já está cadastrado."
+            detail="Este usuário já possui empresa vinculada ou o CNPJ já está cadastrado."
         )
 
 @router.get("/", response_model=List[EmpresaResponse])

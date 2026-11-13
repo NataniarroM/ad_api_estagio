@@ -5,7 +5,6 @@ from decimal import Decimal
 
 # --- SCHEMAS DE EMPRESA ---
 class EmpresaCreate(BaseModel):
-    id_usuario: int
     razao_social: str = Field(..., max_length=150)
     nome_fantasia: str = Field(..., max_length=150)
     cnpj: str = Field(..., max_length=18)
@@ -14,6 +13,7 @@ class EmpresaCreate(BaseModel):
 
 class EmpresaResponse(EmpresaCreate):
     id_empresa: int
+    id_usuario: int
 
     class Config:
         from_attributes = True
@@ -21,7 +21,6 @@ class EmpresaResponse(EmpresaCreate):
 
 # --- SCHEMAS DE VAGA ---
 class VagaCreate(BaseModel):
-    id_empresa: int
     titulo: str = Field(..., max_length=150)
     descricao: str
     requisitos: Optional[str] = None
@@ -41,11 +40,12 @@ class VagaUpdate(BaseModel):
     carga_horaria: Optional[int] = None
     cidade: Optional[str] = None
     data_limite: Optional[date] = None
-    status: Optional[str] = None
+    status_vaga: Optional[str] = None
 
 class VagaResponse(VagaCreate):
     id_vaga: int
-    status: str
+    id_empresa: int
+    status_vaga: str
 
     class Config:
         from_attributes = True
@@ -53,12 +53,12 @@ class VagaResponse(VagaCreate):
 
 # --- SCHEMAS DE CANDIDATURA ---
 class CandidaturaCreate(BaseModel):
-    id_usuario: int
     id_vaga: int
     curriculo_url: Optional[str] = None
 
 class CandidaturaResponse(CandidaturaCreate):
     id_candidatura: int
+    id_usuario: int
     status: str
 
     class Config:
