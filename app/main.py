@@ -1,6 +1,6 @@
 # os: usado para conferir se o arquivo de credenciais existe.
 import os
-
+from app.routers import vagas_router
 # asynccontextmanager: permite criar a função "lifespan" abaixo,
 # que roda código quando a API LIGA (e quando DESLIGA).
 from contextlib import asynccontextmanager
