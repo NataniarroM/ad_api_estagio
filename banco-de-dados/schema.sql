@@ -21,7 +21,6 @@ CREATE TABLE usuario (
 
     telefone VARCHAR(20),
     semestre SMALLINT,
-    aluno BOOLEAN NOT NULL DEFAULT FALSE,
 
     situacao_curso VARCHAR(20)
         CHECK (situacao_curso IN ('cursando', 'concluido')),
