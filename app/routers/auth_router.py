@@ -79,10 +79,25 @@ ERROS_DE_LOGIN = (
 # automaticamente, sem executar o código do endpoint.
 
 class CadastroEntrada(BaseModel):
+<<<<<<< Updated upstream
     """Dados que o front-end precisa enviar para cadastrar um usuário."""
     nome: str = Field(min_length=2, max_length=100)   # entre 2 e 100 letras
     email: str = Field(pattern=PADRAO_EMAIL)          # precisa ter formato de e-mail
     senha: str = Field(min_length=6, max_length=100)  # mínimo 6 (exigência do Firebase)
+=======
+    nome: str = Field(min_length=2, max_length=150)
+    email: str = Field(pattern=PADRAO_EMAIL)
+    senha: str = Field(min_length=6, max_length=100)
+    tipo_usuario: str = Field(default="usuario", pattern="^(usuario|recrutador|administrador)$")
+    id_curso: Optional[int] = None
+    telefone: Optional[str] = Field(default=None, max_length=20)
+    semestre: Optional[int] = Field(default=None, gt=0)
+
+    @field_validator("id_curso", "semestre", mode="before")
+    @classmethod
+    def converter_zero_para_none(cls, valor):
+        return None if valor == 0 else valor
+>>>>>>> Stashed changes
 
 
 class LoginEntrada(BaseModel):
@@ -122,12 +137,14 @@ def cadastrar(dados: CadastroEntrada):
             status_code=status.HTTP_409_CONFLICT,
             detail="Este e-mail já está cadastrado",
         )
-    except ValueError:
-        # O Firebase não aceitou os dados enviados. 400 significa "requisição inválida".
+    except ValueError as e:
+        # Imprime o erro real no terminal do Uvicorn
+        print("ERRO EXATO DO FIREBASE:", str(e))
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Dados de cadastro inválidos",
+            detail=f"Erro Firebase: {str(e)}",
         )
+    
     except Exception:
         # Qualquer outro erro inesperado. 500 significa "erro no servidor".
         # Não mostramos o erro real ao usuário para não vazar informação interna.
@@ -136,8 +153,42 @@ def cadastrar(dados: CadastroEntrada):
             detail="Erro ao criar o usuário",
         )
 
+<<<<<<< Updated upstream
     # Devolve os dados do usuário criado. NUNCA devolvemos a senha.
     return {"uid": usuario.uid, "email": usuario.email, "nome": usuario.display_name}
+=======
+    novo_usuario_db = Usuario(
+        firebase_uid=usuario_fb.uid,
+        id_curso=dados.id_curso,
+        nome=dados.nome,
+        email=dados.email,
+        senha_hash="GERENCIADO_PELO_FIREBASE",
+        tipo_usuario=dados.tipo_usuario,
+        telefone=dados.telefone,
+        semestre=dados.semestre,
+        aluno=(dados.tipo_usuario == "usuario"),
+    )
+
+    db.add(novo_usuario_db)
+    try:
+        db.commit()
+        db.refresh(novo_usuario_db)
+    except IntegrityError:
+        db.rollback()
+        auth.delete_user(usuario_fb.uid)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Erro ao salvar usuário no banco (e-mail duplicado ou id_curso inexistente).",
+        )
+
+    return {
+        "id_usuario": novo_usuario_db.id_usuario,
+        "uid": usuario_fb.uid,
+        "email": novo_usuario_db.email,
+        "nome": novo_usuario_db.nome,
+        "tipo_usuario": novo_usuario_db.tipo_usuario,
+    }
+>>>>>>> Stashed changes
 
 
 # ---------- ENDPOINT 2: LOGIN ----------
