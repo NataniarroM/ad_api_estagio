@@ -1,3 +1,4 @@
+# Tabela curso para cadastro das informações principais dos tipos de cursos
 CREATE TABLE curso (
     id_curso INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nome_curso VARCHAR(150) NOT NULL,
@@ -6,7 +7,7 @@ CREATE TABLE curso (
     ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-
+# Tabela usuario utilizada para a criação do cadastro de cada tipo de usuário
 CREATE TABLE usuario (
     id_usuario INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         firebase_uid VARCHAR(128) NOT NULL UNIQUE, -- Conexão com autenticação do banco
@@ -21,7 +22,6 @@ CREATE TABLE usuario (
 
     telefone VARCHAR(20),
     semestre SMALLINT,
-    aluno BOOLEAN NOT NULL DEFAULT FALSE,
 
     situacao_curso VARCHAR(20)
         CHECK (situacao_curso IN ('cursando', 'concluido')),
@@ -39,7 +39,7 @@ CREATE TABLE usuario (
         CHECK (semestre IS NULL OR semestre > 0)
 );
 
-
+# Se for uma empresa cadastrada, preenche o cadastro específico
 CREATE TABLE empresa (
     id_empresa INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_usuario INTEGER NOT NULL UNIQUE,
@@ -47,7 +47,7 @@ CREATE TABLE empresa (
     razao_social VARCHAR(150) NOT NULL,
     nome_fantasia VARCHAR(150) NOT NULL,
     cnpj VARCHAR(18) NOT NULL UNIQUE,
-    cidade_empresa VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
     site VARCHAR(255),
 
     CONSTRAINT fk_empresa_usuario
@@ -56,7 +56,7 @@ CREATE TABLE empresa (
         ON DELETE RESTRICT
 );
 
-
+# Informações sobre a vaga de estágio
 CREATE TABLE vaga (
     id_vaga INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_empresa INTEGER NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE vaga (
     bolsa NUMERIC(10,2),
     carga_horaria SMALLINT NOT NULL,
 
-    cidade_vaga VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
 
     data_publicacao DATE NOT NULL DEFAULT CURRENT_DATE,
     data_limite DATE NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE vaga (
     status_vaga VARCHAR(20) NOT NULL DEFAULT 'publicada'
         CHECK (status_vaga IN ('publicada', 'encerrada', 'em andamento')),
 
-    criada_em_vaga TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    criada_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_vaga_empresa
         FOREIGN KEY (id_empresa)
@@ -96,7 +96,7 @@ CREATE TABLE vaga (
         CHECK (data_limite >= data_publicacao)
 );
 
-
+# Tabela para armazenar informações das candidaturas dos candidatos
 CREATE TABLE candidatura (
     id_candidatura INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 

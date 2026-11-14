@@ -4,7 +4,6 @@ from app.routers import vagas_router
 # asynccontextmanager: permite criar a função "lifespan" abaixo,
 # que roda código quando a API LIGA (e quando DESLIGA).
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -14,7 +13,7 @@ from app.config import settings
 from app.firebase_config import iniciar_firebase
 
 # Os endpoints de autenticação (/auth/cadastro, /auth/login, /auth/me).
-from app.routers import auth_router
+from app.routers import auth_router, vagas_router, candidatura_router, empresas_router 
 
 
 # O FastAPI executa esta função uma vez quando a API liga.
@@ -50,14 +49,9 @@ app.add_middleware(
 # Registra os endpoints de autenticação na aplicação.
 # Sem esta linha, as rotas /auth/... não existiriam.
 app.include_router(auth_router.router)
-<<<<<<< Updated upstream
-app.include_router(vagas_router.router)
-=======
 app.include_router(vagas_router.router, prefix="/api")
 app.include_router(candidatura_router.router)
 app.include_router(empresas_router.router)
-
->>>>>>> Stashed changes
 
 # Inicialização da API
 @app.get("/")

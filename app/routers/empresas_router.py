@@ -16,7 +16,7 @@ def criar_empresa(
     db: Session = Depends(get_db),
     usuario: Usuario = Depends(get_usuario_db)
 ):
-    if usuario.tipo_usuario != "recrutador":
+    if usuario.tipo_usuario != "empresa":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Apenas usuários do tipo 'empresa' podem cadastrar dados empresariais."
