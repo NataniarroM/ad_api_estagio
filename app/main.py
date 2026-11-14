@@ -49,10 +49,9 @@ app.add_middleware(
 # Registra os endpoints de autenticação na aplicação.
 # Sem esta linha, as rotas /auth/... não existiriam.
 app.include_router(auth_router.router)
-app.include_router(vagas_router.router)
+app.include_router(vagas_router.router, prefix="/api")
 app.include_router(candidatura_router.router)
 app.include_router(empresas_router.router)
-
 
 # Inicialização da API
 @app.get("/")
