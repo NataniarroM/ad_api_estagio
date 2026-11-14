@@ -1,54 +1,81 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import './Login.css';
 
-export default function Login() {//cria os campos 
+export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
-  const aoEnviarLogin = async (e) => {//prepara o formulario para carregar, carregamento = true
+  const aoEnviarLogin = async (e) => {
     e.preventDefault();
     setCarregando(true);
     setMensagem({ tipo: '', texto: '' });
 
     try {
-      // Exemplo de requisição para o endpoint de login do FastAPI
-      const resposta = await fetch('http://127.0.0.1:8000/api/login', {
+      // 1. Apontando para o Java na porta 8080
+      const resposta = await fetch('http://localhost:8080/auth/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',//formato json
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, senha }),//variaveis que estão salvas em json
+        body: JSON.stringify({ email, senha }),
       });
 
-      if (resposta.ok) {
-        setMensagem({ tipo: 'sucesso', texto: 'Login efetuado com sucesso!' });
-        //login ok
-      } else {
-        const dadosErro = await resposta.json();
-        setMensagem({
-          tipo: 'erro',
-          texto: dadosErro.detail || 'E-mail ou senha incorretos.',//volta de erro
-        });
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        throw new Error(dados.detail || 'E-mail ou senha incorretos.');
       }
+
+      // Guarda o token
+      const token = dados.access_token;
+      localStorage.setItem('access_token', token);
+
+      // 2. Apontando para o Java na porta 8080 para pegar o perfil
+      const respostaPerfil = await fetch('http://localhost:8080/api/perfil', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!respostaPerfil.ok) {
+        throw new Error('Erro ao carregar os dados do perfil.');
+      }
+
+      const dadosPerfil = await respostaPerfil.json();
+      const tipoUsuario = dadosPerfil.tipo; 
+
+      localStorage.setItem('tipo_usuario', tipoUsuario);
+      setMensagem({ tipo: 'sucesso', texto: 'Login efetuado com sucesso!' });
+
+      // 3. Redireciona
+      setTimeout(() => {
+        if (tipoUsuario === 'recrutador' || tipoUsuario === 'empresa') {
+          navigate('/cadastrovaga');
+        } else {
+          navigate('/');
+        }
+      }, 1000);
+
     } catch (erro) {
-      console.error('Erro de conexão:', erro);
+      console.error('Erro no login:', erro);
       setMensagem({
         tipo: 'erro',
-        texto: 'Não foi possível conectar ao servidor.',
+        texto: erro.message || 'Não foi possível conectar ao servidor.',
       });
     } finally {
-      setCarregando(false);//se errado = carregamento false
+      setCarregando(false);
     }
   };
 
   return (
     <div className="pagina-login">
       <Cabecalho />
-
       <main className="conteudo-login">
         <div className="cartao-login">
           <h2 className="titulo-pagina">Bem-vindo de volta!</h2>
@@ -69,7 +96,7 @@ export default function Login() {//cria os campos
                   className="campo-texto"
                   placeholder="seu@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}//inserir email
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -83,7 +110,7 @@ export default function Login() {//cria os campos
                   className="campo-texto"
                   placeholder="Sua senha"
                   value={senha}
-                  onChange={(e) => setSenha(e.target.value)}//inserir senha
+                  onChange={(e) => setSenha(e.target.value)}
                   required
                 />
               </div>

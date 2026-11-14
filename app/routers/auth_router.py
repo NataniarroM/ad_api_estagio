@@ -228,7 +228,7 @@ def login(dados: LoginEntrada):
 
 # ---------- ENDPOINT 3: PERFIL (protegido) ----------
 
-@router.get("/me")
+@router.get("/perfil")
 def meu_perfil(usuario: dict = Depends(get_usuario_atual)):
     """Endpoint protegido: só responde se o token for válido."""
     return usuario
