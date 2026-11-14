@@ -18,7 +18,7 @@ CREATE TABLE usuario (
     senha_hash VARCHAR(255) NOT NULL,
 
     tipo_usuario VARCHAR(20) NOT NULL
-        CHECK (tipo_usuario IN ('estudante', 'empresa', 'admin')),
+        CHECK (tipo_usuario IN ('usuario', 'recrutador', 'administrador')),
 
     telefone VARCHAR(20),
     semestre SMALLINT,
