@@ -7,7 +7,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [tipoConta, setTipoConta] = useState('estudante');
+  const [tipoConta, setTipoConta] = useState('usuario');
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
@@ -73,17 +73,24 @@ export default function Cadastro() {
           <div className="seletor-tipo-conta">
             <button
               type="button"
-              className={`botao-tipo ${tipoConta === 'estudante' ? 'ativo' : ''}`}
-              onClick={() => setTipoConta('estudante')}//mudaça de tipo seta, como estudante
+              className={`botao-tipo ${tipoConta === 'usuario' ? 'ativo' : ''}`}
+              onClick={() => setTipoConta('usuario')}//mudaça de tipo seta, como estudante
             >
-              Estudante
+              Usuário
             </button>
             <button
               type="button"
-              className={`botao-tipo ${tipoConta === 'empresa' ? 'ativo' : ''}`}
-              onClick={() => setTipoConta('empresa')}//mudança de tipo, seta como empresa
+              className={`botao-tipo ${tipoConta === 'recrutador' ? 'ativo' : ''}`}
+              onClick={() => setTipoConta('recrutador')}//mudança de tipo, seta como empresa
             >
-              Empresa
+              Recrutador
+            </button>
+            <button
+              type="button"
+              className={`botao-tipo ${tipoConta === 'administrador' ? 'ativo' : ''}`}
+              onClick={() => setTipoConta('administrador')}//mudança de tipo, seta como empresa
+            >
+              Administrador
             </button>
           </div>
 
