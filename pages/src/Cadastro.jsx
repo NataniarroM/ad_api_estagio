@@ -1,60 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Cadastro.css';
 import Cabecalho from './components/Cabecalho';
 
 export default function Cadastro() {
-  const [nome, setNome] = useState('');//criando campos e setando como vazio
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [form, setForm] = useState({
+    nome: '', email: '', senha: '', confirmarSenha: '', telefone: '', semestre: '', id_curso: ''
+  });
   const [tipoConta, setTipoConta] = useState('usuario');
+  const [cursos, setCursos] = useState([]);
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
+  // Busca os cursos na API para preencher a barra de rolagem
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/cursos')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setCursos(data))
+      .catch(err => console.error('Erro ao buscar cursos:', err));
+  }, []);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const aoEnviarCadastro = async (e) => {
     e.preventDefault();
-
-    if (senha !== confirmarSenha) {//conferindo senha 
-      setMensagem({ tipo: 'erro', texto: 'As senhas não coincidem.' });
-      return;
+    if (form.senha !== form.confirmarSenha) {
+      return setMensagem({ tipo: 'erro', texto: 'As senhas não coincidem.' });
     }
 
     setCarregando(true);
     setMensagem({ tipo: '', texto: '' });
 
     try {
-    const resposta = await fetch('http://127.0.0.1:8000/auth/cadastro', {
+      const resposta = await fetch('http://127.0.0.1:8000/auth/cadastro', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nome,
-          email,
-          senha,
+          nome: form.nome,
+          email: form.email,
+          senha: form.senha,
           tipo: tipoConta,
+          // Convertendo telefone e semestre para números inteiros (int) conforme o seu back-end exige
+          telefone: form.telefone ? Number(form.telefone) : null,
+          semestre: form.semestre ? Number(form.semestre) : null,
+          id_curso: form.id_curso ? Number(form.id_curso) : null,
         }),
       });
 
-      if (resposta.ok) {//se cadastro der certo
+      if (resposta.ok) {
         setMensagem({ tipo: 'sucesso', texto: 'Conta criada com sucesso!' });
-        setNome('');
-        setEmail('');
-        setSenha('');
-        setConfirmarSenha('');
+        setForm({ nome: '', email: '', senha: '', confirmarSenha: '', telefone: '', semestre: '', id_curso: '' });
       } else {
-        const dadosErro = await resposta.json();//se os dados derem errado
-        setMensagem({
-          tipo: 'erro',
-          texto: dadosErro.detail || 'Erro ao realizar o cadastro.',//mensagem
-        });
+        const dadosErro = await resposta.json();
+        setMensagem({ tipo: 'erro', texto: dadosErro.detail || 'Erro ao realizar o cadastro.' });
       }
     } catch (erro) {
-      console.error('Erro de conexão:', erro);
-      setMensagem({
-        tipo: 'erro',
-        texto: 'Não foi possível conectar ao servidor.',
-      });
+      setMensagem({ tipo: 'erro', texto: 'Não foi possível conectar ao servidor.' });
     } finally {
       setCarregando(false);
     }
@@ -63,98 +65,70 @@ export default function Cadastro() {
   return (
     <div className="pagina-cadastro">
       <Cabecalho />
-      {/* Conteúdo Principal / Cartão de Cadastro */}
       <main className="conteudo-cadastro">
         <div className="cartao-cadastro">
           <h2 className="titulo-pagina">Crie a sua conta</h2>
           <p className="subtitulo-pagina">Comece a procurar as melhores oportunidades</p>
 
-          {/* Botões para Escolher o Tipo de Conta */}
           <div className="seletor-tipo-conta">
-            <button
-              type="button"
-              className={`botao-tipo ${tipoConta === 'usuario' ? 'ativo' : ''}`}
-              onClick={() => setTipoConta('usuario')}//mudaça de tipo seta, como estudante
-            >
-              Usuário
-            </button>
-            <button
-              type="button"
-              className={`botao-tipo ${tipoConta === 'recrutador' ? 'ativo' : ''}`}
-              onClick={() => setTipoConta('recrutador')}//mudança de tipo, seta como empresa
-            >
-              Recrutador
-            </button>
-            <button
-              type="button"
-              className={`botao-tipo ${tipoConta === 'administrador' ? 'ativo' : ''}`}
-              onClick={() => setTipoConta('administrador')}//mudança de tipo, seta como empresa
-            >
-              Administrador
-            </button>
+            {['usuario', 'recrutador', 'administrador'].map((tipo) => (
+              <button
+                key={tipo}
+                type="button"
+                className={`botao-tipo ${tipoConta === tipo ? 'ativo' : ''}`}
+                onClick={() => setTipoConta(tipo)}
+              >
+                {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+              </button>
+            ))}
           </div>
 
-          {mensagem.texto && (// div do erro
-            <div className={`mensagem-alerta ${mensagem.tipo}`}>
-              {mensagem.texto}
-            </div>
+          {mensagem.texto && (
+            <div className={`mensagem-alerta ${mensagem.tipo}`}>{mensagem.texto}</div>
           )}
 
-          {/* Formulário */}
           <form onSubmit={aoEnviarCadastro} className="formulario-cadastro">
-            <div className="grupo-campo">
-              <label className="rotulo-campo">Nome Completo</label>
-              <div className="caixa-campo">
-                <input
-                  type="text"
-                  className="campo-texto"
-                  placeholder="Digite o seu nome"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}//campo inserir nome
-                  required
-                />
+            {[
+              { label: 'Nome Completo', name: 'nome', type: 'text', placeholder: 'Digite o seu nome' },
+              { label: 'E-mail', name: 'email', type: 'email', placeholder: 'exemplo@email.com' },
+              { label: 'Senha', name: 'senha', type: 'password', placeholder: 'Mínimo de 6 caracteres' },
+              { label: 'Confirmar Senha', name: 'confirmarSenha', type: 'password', placeholder: 'Repita a sua senha' },
+              { label: 'Telefone (Apenas números)', name: 'telefone', type: 'number', placeholder: 'Ex: 11988888888' },
+              { label: 'Semestre (Apenas números)', name: 'semestre', type: 'number', placeholder: 'Ex: 3' },
+            ].map((campo) => (
+              <div className="grupo-campo" key={campo.name}>
+                <label className="rotulo-campo">{campo.label}</label>
+                <div className="caixa-campo">
+                  <input
+                    type={campo.type}
+                    name={campo.name}
+                    className="campo-texto"
+                    placeholder={campo.placeholder}
+                    value={form[campo.name]}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </div>
-            </div>
+            ))}
 
             <div className="grupo-campo">
-              <label className="rotulo-campo">E-mail</label>
+              <label className="rotulo-campo">Curso</label>
               <div className="caixa-campo">
-                <input
-                  type="email"
+                <select
+                  name="id_curso"
                   className="campo-texto"
-                  placeholder="exemplo@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}//campo inserir email
+                  value={form.id_curso}
+                  onChange={handleChange}
                   required
-                />
-              </div>
-            </div>
-
-            <div className="grupo-campo">
-              <label className="rotulo-campo">Senha</label>
-              <div className="caixa-campo">
-                <input
-                  type="password"
-                  className="campo-texto"
-                  placeholder="Mínimo de 6 caracteres"
-                  value={senha}
-                  onChange={(e) => setSenha(e.target.value)}//campo inserir senha
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grupo-campo">
-              <label className="rotulo-campo">Confirmar Senha</label>
-              <div className="caixa-campo">
-                <input
-                  type="password"
-                  className="campo-texto"
-                  placeholder="Repita a sua senha"
-                  value={confirmarSenha}
-                  onChange={(e) => setConfirmarSenha(e.target.value)}//campo confirmar senha
-                  required
-                />
+                >
+                  <option value="">-- Selecione o seu curso --</option>
+                  {cursos.map((curso) => (
+                    <option key={curso.id} value={curso.id}>
+                      ID: {curso.id} - {curso.nome}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
