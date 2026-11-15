@@ -159,7 +159,7 @@ export default function App() {
         </button>
       )}
       {podeCadastrarCurso && (
-        <button type="button" className="botao-gestao" onClick={() => navigate('/cadastracurso')}>
+        <button type="button" className="botao-gestao botao-gestao-secundario" onClick={() => navigate('/cadastracurso')}>
           + Cadastrar Curso
         </button>
       )}
