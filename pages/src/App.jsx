@@ -106,17 +106,12 @@ export default function App() {
 
       <section className="secao-topo">
         <h1 className="titulo-principal">
-<<<<<<< Updated upstream
-          Encontre seu<br />próximo estágio
-        </h1>
-=======
           Encontre seu
           <span className="titulo-destaque">
             próximo estágio
           </span>
         </h1>
 
->>>>>>> Stashed changes
         <p className="subtitulo-principal">
           Conectando estudantes a grandes oportunidades.
         </p>
@@ -186,6 +181,7 @@ export default function App() {
           </button>
         )}
       </div>
+
       {/* Lista de Vagas */}
       <main className="secao-conteudo">
         <div className="cabecalho-secao">
@@ -203,11 +199,7 @@ export default function App() {
           </p>
         ) : (
           <div className="grade-vagas">
-<<<<<<< Updated upstream
-            {vagas.map((item) => (
-=======
             {vagasFiltradas.map((item) => (
->>>>>>> Stashed changes
               <CartaoVaga key={item.id_vaga || item.id} vaga={item} />
             ))}
           </div>
