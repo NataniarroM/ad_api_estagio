@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './Detalhes.css';
+import Cabecalho from './components/Cabecalho';
+import './detalhes.css';
 
 export default function Detalhes() {
   const { id } = useParams();
