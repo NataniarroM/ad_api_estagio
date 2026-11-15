@@ -187,6 +187,24 @@ def test_login_sem_chave_da_api(client, monkeypatch):
     monkeypatch.setattr(settings, "FIREBASE_API_KEY", "")
     resposta = client.post("/auth/login", json=LOGIN_OK)
     assert resposta.status_code == 500
+    
+@patch("app.routers.auth_router.requests.post")
+def test_login_devolve_tipo_usuario(mock_post, client, banco, monkeypatch):
+    monkeypatch.setattr(settings, "FIREBASE_API_KEY", "chave-falsa")
+    # O usuário precisa existir no banco, com o mesmo uid que o Firebase devolve.
+    db = banco()
+    db.add(Usuario(firebase_uid="uid-adm", nome="Admin", email="maria@email.com",
+                   senha_hash="x", tipo_usuario="administrador"))
+    db.commit()
+    db.close()
+    mock_post.return_value = MagicMock(
+        status_code=200, json=lambda: {"idToken": "tok", "localId": "uid-adm"}
+    )
+
+    resposta = client.post("/auth/login", json=LOGIN_OK)
+
+    assert resposta.status_code == 200
+    assert resposta.json()["tipo_usuario"] == "administrador"
 
 
 # ================= TESTES DO ENDPOINT PROTEGIDO (/auth/perfil) =================
@@ -231,3 +249,5 @@ def test_perfil_usuario_fora_do_banco(mock_verify, client):
     resposta = client.get("/auth/perfil", headers={"Authorization": "Bearer abc"})
 
     assert resposta.status_code == 404
+    
+    test_login_sem_chave_da_api
