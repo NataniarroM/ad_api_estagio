@@ -21,7 +21,6 @@ class Usuario(Base):
     tipo_usuario = Column(String(20), nullable=False)
     telefone = Column(String(20))
     semestre = Column(SmallInteger) # Revisado por IA
-    aluno = Column(Boolean, nullable=False, default=False)
     situacao_curso = Column(String(20))
     eh_entrevistador = Column(Boolean, nullable=False, default=False)
     criado_em = Column(DateTime, nullable=False, server_default=func.now()) # Gerado por IA
@@ -66,7 +65,7 @@ class Vaga(Base):
 
 class Candidatura(Base):
 
-    __tablename__ = "candidaturas"
+    __tablename__ = "candidatura"
 
     id_candidatura = Column(Integer, primary_key=True, index=True)
     id_vaga = Column(Integer,
@@ -76,8 +75,8 @@ class Candidatura(Base):
                         ForeignKey("usuario.id_usuario", ondelete="CASCADE"),
                         nullable=False)
 
-    data_da_candidatura = Column(DateTime, nullable=False, server_default=func.now()) # Gerado por IA
-    status = Column(String(20), nullable=False, default="enviada")
+    data_candidatura = Column(DateTime, nullable=False, server_default=func.now()) # Gerado por IA
+    status_candidatura = Column(String(20), nullable=False, default="enviada")
     curriculo_url = Column(String(500))
 
 

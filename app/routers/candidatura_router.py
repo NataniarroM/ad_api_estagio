@@ -8,7 +8,7 @@ from app.models import Candidatura, Usuario
 from app.schemas import CandidaturaCreate, CandidaturaResponse
 from app.seguranca import get_usuario_db
 
-router = APIRouter(prefix="/candidaturas", tags=["Candidaturas"])
+router = APIRouter(prefix="/candidatura", tags=["Candidatura"])
 
 @router.post("/", response_model=CandidaturaResponse, status_code=status.HTTP_201_CREATED)
 def criar_candidatura(
@@ -16,7 +16,7 @@ def criar_candidatura(
     db: Session = Depends(get_db),
     usuario: Usuario = Depends(get_usuario_db)
 ):
-    if usuario.tipo_usuario != "estudante":
+    if usuario.tipo_usuario != "usuario":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Apenas estudantes podem se candidatar a vagas."
