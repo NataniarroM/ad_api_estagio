@@ -75,12 +75,11 @@ def deletar_vaga(
     db: Session = Depends(get_db),
     usuario: Usuario = Depends(get_usuario_db)
 ):
-    empresa = db.query(Empresa).filter(Empresa.id_usuario == usuario.id_usuario).first()
     vaga = db.query(Vaga).filter(Vaga.id_vaga == id_vaga).first()
 
     if not vaga:
         raise HTTPException(status_code=404, detail="Vaga não encontrada.")
-    if usuario.tipo_usuario != "administrador" and (not empresa or vaga.id_empresa != empresa.id_empresa):
+    if usuario.tipo_usuario != "administrador":
         raise HTTPException(status_code=403, detail="Você não tem permissão para excluir esta vaga.")
 
     db.delete(vaga)

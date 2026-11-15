@@ -5,10 +5,10 @@ from decimal import Decimal
 
 # --- SCHEMAS DE EMPRESA ---
 class EmpresaCreate(BaseModel):
-    razao_social: str = Field(..., max_length=150)
-    nome_fantasia: str = Field(..., max_length=150)
-    cnpj: str = Field(..., max_length=18)
-    cidade: str = Field(..., max_length=100)
+    nome_fantasia: str = Field(..., min_length=1, max_length=150, pattern=r"\S")
+    razao_social: Optional[str] = Field(None, max_length=150)
+    cnpj: Optional[str] = Field(None, max_length=18)
+    cidade: Optional[str] = Field(None, max_length=100)
     site: Optional[str] = None
 
 class EmpresaResponse(EmpresaCreate):

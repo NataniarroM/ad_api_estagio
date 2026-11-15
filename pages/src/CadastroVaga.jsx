@@ -1,136 +1,198 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+﻿import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
-import './Login.css';
+import './CadastroVaga.css';
 
-export default function Login() {
+const API = 'http://localhost:8000';
+
+export default function CadastroVaga() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [carregando, setCarregando] = useState(false);
+  const token = localStorage.getItem('access_token');
+  const [autorizado, setAutorizado] = useState(false);
   const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
+  const [carregando, setCarregando] = useState(false);
+  const [precisaEmpresa, setPrecisaEmpresa] = useState(false);
+  const [salvandoEmpresa, setSalvandoEmpresa] = useState(false);
 
-  const aoEnviarLogin = async (e) => {
+  const cadastrarEmpresa = async (e) => {
     e.preventDefault();
+    const empresa = Object.fromEntries(new FormData(e.currentTarget));
+    empresa.nome_fantasia = empresa.nome_fantasia.trim();
+    setSalvandoEmpresa(true);
+    try {
+      const resposta = await fetch(`${API}/empresas/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(empresa),
+      });
+      const dados = await resposta.json().catch(() => ({}));
+      if (!resposta.ok) {
+        const detalhe = Array.isArray(dados.detail)
+          ? dados.detail.map((item) => item.msg).join(', ') : dados.detail;
+        throw new Error(detalhe || 'Erro ao cadastrar empresa.');
+      }
+      setPrecisaEmpresa(false);
+      setMensagem({ tipo: 'sucesso', texto: 'Empresa cadastrada! Agora clique em Publicar Vaga para concluir.' });
+    } catch (erro) {
+      setMensagem({ tipo: 'erro', texto: erro.message });
+    } finally {
+      setSalvandoEmpresa(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    let ativo = true;
+    fetch(`${API}/auth/perfil`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(async (resposta) => {
+        if (!ativo) return;
+        if (resposta.status === 401) {
+          navigate('/login', { replace: true });
+          return;
+        }
+        if (!resposta.ok) throw new Error('Erro ao verificar seu perfil. Recarregue a página.');
+        const perfil = await resposta.json();
+        if (!ativo) return;
+        if (['recrutador', 'administrador', 'adm'].includes(perfil.tipo_usuario)) {
+          setAutorizado(true);
+        } else {
+          navigate('/', { replace: true });
+        }
+      })
+      .catch((erro) => {
+        if (ativo) setMensagem({ tipo: 'erro', texto: erro.message });
+      });
+    return () => { ativo = false; };
+  }, [token, navigate]);
+
+  const publicar = async (e) => {
+    e.preventDefault();
+    const vaga = Object.fromEntries(new FormData(e.currentTarget));
+    vaga.bolsa = vaga.bolsa === '' ? null : Number(vaga.bolsa);
+    vaga.carga_horaria = Number(vaga.carga_horaria);
+    if (vaga.data_limite < vaga.data_publicacao) {
+      setMensagem({ tipo: 'erro', texto: 'A data limite deve ser igual ou posterior à publicação.' });
+      return;
+    }
     setCarregando(true);
     setMensagem({ tipo: '', texto: '' });
-
     try {
-      // 1. Apontando para o Java na porta 8080
-      const resposta = await fetch('http://localhost:8000/auth/login', {
+      const resposta = await fetch(`${API}/api/vagas/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, senha }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(vaga),
       });
-
-      const dados = await resposta.json();
-
+      const dados = await resposta.json().catch(() => ({}));
       if (!resposta.ok) {
-        throw new Error(dados.detail || 'E-mail ou senha incorretos.');
-      }
-
-      // Guarda o token
-      const token = dados.access_token;
-      localStorage.setItem('access_token', token);
-
-      // 2. Apontando para o Java na porta 8080 para pegar o perfil
-      const respostaPerfil = await fetch('http://localhost:8000/auth/perfil', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!respostaPerfil.ok) {
-        throw new Error('Erro ao carregar os dados do perfil.');
-      }
-
-      const dadosPerfil = await respostaPerfil.json();
-      const tipoUsuario = dadosPerfil.tipo_usuario; 
-
-      localStorage.setItem('tipo_usuario', tipoUsuario);
-      setMensagem({ tipo: 'sucesso', texto: 'Login efetuado com sucesso!' });
-
-      // 3. Redireciona
-      setTimeout(() => {
-        if (tipoUsuario === 'recrutador' || tipoUsuario === 'administrador') {
-          navigate('/cadastrovaga');
-        } else {
-          navigate('/');
+        if (resposta.status === 403 && dados.detail === 'Cadastre os dados da sua empresa antes de publicar vagas.') {
+          setPrecisaEmpresa(true);
         }
-      }, 1000);
-
+        const detalhe = Array.isArray(dados.detail)
+          ? dados.detail.map((item) => item.msg).join(', ') : dados.detail;
+        throw new Error(detalhe || 'Erro ao publicar a vaga.');
+      }
+      setMensagem({ tipo: 'sucesso', texto: 'Vaga publicada com sucesso!' });
     } catch (erro) {
-      console.error('Erro no login:', erro);
-      setMensagem({
-        tipo: 'erro',
-        texto: erro.message || 'Não foi possível conectar ao servidor.',
-      });
+      setMensagem({ tipo: 'erro', texto: erro.message });
     } finally {
       setCarregando(false);
     }
   };
 
   return (
-    <div className="pagina-login">
+    <>
       <Cabecalho />
-      <main className="conteudo-login">
-        <div className="cartao-login">
-          <h2 className="titulo-pagina">Bem-vindo de volta!</h2>
-          <p className="subtitulo-pagina">Entre na sua conta para continuar</p>
-
-          {mensagem.texto && (
-            <div className={`mensagem-alerta ${mensagem.tipo}`}>
-              {mensagem.texto}
+      <main className="vaga-container">
+        <section className="vaga-card">
+          <div className="vaga-header"><h2>Publicar Nova Vaga</h2></div>
+          {mensagem.texto && <p role="alert" className={`alerta-${mensagem.tipo}`}>{mensagem.texto}</p>}
+          {autorizado && (
+            <div className="empresa-opcoes">
+              <h3>Dados da empresa</h3>
+              <p>Se sua conta ainda não tem uma empresa vinculada, cadastre os dados antes de publicar a vaga.</p>
+              <button
+                type="button"
+                className="btn-cancelar"
+                aria-expanded={precisaEmpresa}
+                aria-controls="cadastro-empresa"
+                onClick={() => setPrecisaEmpresa(!precisaEmpresa)}
+              >
+                {precisaEmpresa ? 'Ocultar dados da empresa' : 'Adicionar dados da empresa'}
+              </button>
             </div>
           )}
-
-          <form onSubmit={aoEnviarLogin} className="formulario-login">
-            <div className="grupo-campo">
-              <label className="rotulo-campo">E-mail</label>
-              <div className="caixa-campo">
-                <input
-                  type="email"
-                  className="campo-texto"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+          {autorizado && precisaEmpresa && (
+            <section id="cadastro-empresa" aria-label="Cadastro da empresa">
+              <h3>Cadastrar empresa</h3>
+              <p>Vincule sua empresa à conta para publicar. Os dados da vaga serão mantidos abaixo.</p>
+              <form className="vaga-form" onSubmit={cadastrarEmpresa}>
+                <div className="form-grupo">
+                  <label htmlFor="empresa-nome">Nome da empresa</label>
+                  <input id="empresa-nome" name="nome_fantasia" maxLength={150} pattern=".*\S.*" required />
+                </div>
+                <button className="btn-publicar" disabled={salvandoEmpresa}>
+                  {salvandoEmpresa ? 'Salvando...' : 'Salvar empresa'}
+                </button>
+              </form>
+            </section>
+          )}
+          {!autorizado ? (!mensagem.texto && <p>Verificando acesso...</p>) : (
+            <form className="vaga-form" onSubmit={publicar}>
+              <div className="form-grupo">
+                <label htmlFor="titulo">Título da vaga</label>
+                <input id="titulo" name="titulo" maxLength={150} required />
               </div>
-            </div>
-
-            <div className="grupo-campo">
-              <label className="rotulo-campo">Senha</label>
-              <div className="caixa-campo">
-                <input
-                  type="password"
-                  className="campo-texto"
-                  placeholder="Sua senha"
-                  value={senha}
-                  onChange={(e) => setSenha(e.target.value)}
-                  required
-                />
+              <div className="form-grupo">
+                <label htmlFor="local">Cidade</label>
+                <input id="local" name="cidade" maxLength={100} required />
               </div>
-            </div>
-
-            <div className="opcoes-login">
-              <a href="#recuperar" className="link-esqueci">Esqueceu a senha?</a>
-            </div>
-
-            <button type="submit" className="botao-entrar" disabled={carregando}>
-              {carregando ? 'A entrar...' : 'Entrar'}
-            </button>
-          </form>
-
-          <div className="rodape-card">
-            <span>Ainda não tem uma conta? </span>
-            <Link to="/cadastro" className="link-cadastrar">Cadastre-se</Link>
-          </div>
-        </div>
+              <div className="form-grupo">
+                <label htmlFor="modalidade">Modalidade</label>
+                <select id="modalidade" name="modalidade" defaultValue="presencial">
+                  <option value="presencial">Presencial</option>
+                  <option value="hibrida">Híbrido</option>
+                  <option value="remota">Remoto</option>
+                </select>
+              </div>
+              <div className="form-linha">
+                <div className="form-grupo">
+                  <label htmlFor="salario">Bolsa (R$)</label>
+                  <input id="salario" name="bolsa" type="number" min="0" step="0.01" />
+                </div>
+                <div className="form-grupo">
+                  <label htmlFor="carga_horaria">Carga horária</label>
+                  <input id="carga_horaria" name="carga_horaria" type="number" min="1" defaultValue="30" required />
+                </div>
+              </div>
+              <div className="form-grupo">
+                <label htmlFor="descricao">Descrição</label>
+                <textarea id="descricao" name="descricao" required />
+              </div>
+              <div className="form-grupo">
+                <label htmlFor="requisitos">Requisitos</label>
+                <textarea id="requisitos" name="requisitos" />
+              </div>
+              <div className="form-linha">
+                <div className="form-grupo">
+                  <label htmlFor="data_publicacao">Data de publicação</label>
+                  <input id="data_publicacao" name="data_publicacao" type="date" defaultValue={new Date().toLocaleDateString('en-CA')} required />
+                </div>
+                <div className="form-grupo">
+                  <label htmlFor="data_limite">Data limite</label>
+                  <input id="data_limite" name="data_limite" type="date" required />
+                </div>
+              </div>
+              <div className="vaga-acoes">
+                <button type="button" className="btn-cancelar" onClick={() => navigate('/')}>Voltar para vagas</button>
+                <button type="submit" className="btn-publicar" disabled={carregando}>{carregando ? 'Publicando...' : 'Publicar Vaga'}</button>
+              </div>
+            </form>
+          )}
+        </section>
       </main>
-    </div>
+    </>
   );
 }

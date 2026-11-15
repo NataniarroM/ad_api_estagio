@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 URL = "http://localhost:5173/"
-API = "http://127.0.0.1:8000/api/vagas"
+API = "http://localhost:8000/api/vagas/"
 
 VAGAS = [
     {

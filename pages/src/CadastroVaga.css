@@ -1,3 +1,23 @@
+.empresa-opcoes {
+  margin-bottom: 24px;
+}
+
+.empresa-opcoes h3 {
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.empresa-opcoes p {
+  color: #475569;
+  line-height: 1.5;
+}
+
+#cadastro-empresa {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
 .vaga-container {
   min-height: calc(100vh - 80px);
   background-color: #f8fafc;

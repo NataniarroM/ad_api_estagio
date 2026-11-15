@@ -64,7 +64,7 @@ export default function Login() {
       setMensagem({ tipo: 'sucesso', texto: 'Login efetuado com sucesso!' });
 
       setTimeout(() => {
-        if (tipoUsuario === 'recrutador' || tipoUsuario === 'administrador') {
+        if (['recrutador', 'administrador', 'adm'].includes(tipoUsuario)) {
           navigate('/cadastrovaga');
         } else {
           navigate('/');
