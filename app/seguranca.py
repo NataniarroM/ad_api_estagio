@@ -61,7 +61,7 @@ def get_usuario_atual(credenciais: HTTPAuthorizationCredentials = Depends(bearer
         # O Firebase confere se o token é verdadeiro (assinatura), se não expirou
         # (cada token dura cerca de 1 hora) e se pertence ao nosso projeto.
         # Se estiver tudo certo, devolve os dados do usuário que estão dentro do token.
-        dados = auth.verify_id_token(token)
+        dados = auth.verify_id_token(token, clock_skew_seconds=60)
     except Exception as erro:
         # Qualquer problema (token falso, expirado, mal formado...) cai aqui.
         # Anotamos o MOTIVO REAL no terminal (só quem mantém a API vê isso).
@@ -91,8 +91,6 @@ def get_usuario_db(
             detail="Usuário autenticado no Firebase, mas não cadastrado no banco de dados.",
         )
     return usuario
-
-
 
 def exigir_administrador(usuario: Usuario = Depends(get_usuario_db)) -> Usuario:
     """Porteiro de ADMINISTRADOR: só deixa passar quem tem tipo_usuario "administrador".
