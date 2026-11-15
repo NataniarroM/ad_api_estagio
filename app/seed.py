@@ -37,6 +37,11 @@ CURSOS_INICIAIS = [
     {"nome": "Sistemas de Informação", "nivel": "bacharelado"},
     {"nome": "Análise e Desenvolvimento de Sistemas", "nivel": "tecnologo"},
     {"nome": "Administração", "nivel": "bacharelado"},
+    {"nome": "Engenharia de Computação", "nivel": "bacharelado"},
+    {"nome": "Redes de Computadores", "nivel": "tecnologo"},
+    {"nome": "Ciências Contábeis", "nivel": "bacharelado"},
+    {"nome": "Design Gráfico", "nivel": "tecnologo"},
+    {"nome": "Matemática", "nivel": "licenciatura"},
 ]
 
 
