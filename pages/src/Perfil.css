@@ -1,225 +1,622 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* =====================================
+   ESTAGUP - PERFIL
+   ===================================== */
+
 .pagina-perfil {
   min-height: 100vh;
-  background-color: #f8fafc;
   display: flex;
   flex-direction: column;
+  background-color: #fff7f2;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  font-family: 'Poppins', sans-serif;
+  color: #342019;
 }
 
-.conteudo-perfil {
-  max-width: 1100px;
+/* Área principal */
+
+.pagina-perfil .conteudo-perfil {
   width: 100%;
-  margin: 30px auto;
-  padding: 0 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 55px 24px 90px;
+  box-sizing: border-box;
 }
 
-/* Cartão do Topo (Capa e Avatar) */
-.cartao-perfil-topo {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 32px;
+/* =====================================
+   CARTÃO SUPERIOR
+   ===================================== */
+
+.pagina-perfil .cartao-perfil-topo {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  gap: 25px;
+  padding: 32px;
+  margin-bottom: 26px;
+
+  background: rgba(255, 251, 249, 0.97);
+  border: 1px solid #f0dfd5;
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(91, 47, 31, 0.10);
 }
 
-.avatar-grande {
-  width: 72px;
-  height: 72px;
-  background-color: #c2410c;
+.pagina-perfil .avatar-grande {
+  width: 94px;
+  height: 94px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #b9481d;
   border-radius: 50%;
+}
+
+.pagina-perfil .texto-avatar-grande {
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 31px;
+  font-weight: 700;
+}
+
+.pagina-perfil .info-usuario-topo {
+  flex: 1;
+  min-width: 0;
+}
+
+.pagina-perfil .nome-usuario {
+  margin: 0 0 5px;
+  color: #342019;
+  font-family: 'Poppins', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.pagina-perfil .subtitulo-usuario {
+  margin: 0;
+  color: #786660;
+  font-size: 14px;
+}
+
+.pagina-perfil .botao-editar-perfil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  flex-shrink: 0;
+
+  padding: 12px 20px;
+  background: #fff3ee;
+  border: 1px solid #e6a28d;
+  border-radius: 12px;
+
+  color: #a7432b;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagina-perfil .botao-editar-perfil:hover {
+  background: #fbe3d8;
+}
+
+/* =====================================
+   MENU E PAINEL
+   ===================================== */
+
+.pagina-perfil .corpo-perfil {
+  display: grid;
+  grid-template-columns: 295px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.pagina-perfil .menu-lateral-perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding: 18px;
+  background: rgba(255, 251, 249, 0.97);
+  border: 1px solid #f0dfd5;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px rgba(91, 47, 31, 0.08);
+}
+
+.pagina-perfil .item-menu-perfil {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+
+  padding: 14px 15px;
+  box-sizing: border-box;
+
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+
+  color: #38241d;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pagina-perfil .item-menu-perfil svg {
+  flex-shrink: 0;
+}
+
+.pagina-perfil .item-menu-perfil:hover {
+  background: #fff1e9;
+}
+
+.pagina-perfil .item-menu-perfil.ativo {
+  background: #fbe3d5;
+  color: #a7432b;
+  font-weight: 600;
+}
+
+/* Painel da direita */
+
+.pagina-perfil .detalhes-perfil {
+  min-width: 0;
+}
+
+.pagina-perfil .bloco-detalhes {
+  padding: 30px;
+  background: rgba(255, 251, 249, 0.97);
+  border: 1px solid #f0dfd5;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px rgba(91, 47, 31, 0.08);
+}
+
+.pagina-perfil .cabecalho-bloco-perfil {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding-bottom: 23px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #ead7cc;
+}
+
+.pagina-perfil .icone-titulo-perfil,
+.pagina-perfil .icone-info {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
+  width: 52px;
+  height: 52px;
+
+  background: #fceadd;
+  color: #a9533d;
+  border-radius: 14px;
 }
 
-.texto-avatar-grande {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.5rem;
-}
-
-.info-usuario-topo {
-  flex: 1;
-}
-
-.nome-usuario {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 4px 0;
-}
-
-.subtitulo-usuario {
-  font-size: 0.95rem;
-  color: #64748b;
+.pagina-perfil .titulo-bloco {
   margin: 0;
+  padding: 0;
+  border: none;
+
+  color: #342019;
+  font-family: 'Poppins', sans-serif;
+  font-size: 21px;
+  font-weight: 700;
 }
 
-.botao-editar-perfil {
-  background-color: #f1f5f9;
-  color: #334155;
-  border: 1px solid #cbd5e1;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+/* =====================================
+   INFORMAÇÕES PESSOAIS
+   ===================================== */
 
-.botao-editar-perfil:hover {
-  background-color: #e2e8f0;
-}
-
-/* Corpo com Sidebar e Detalhes */
-.corpo-perfil {
+.pagina-perfil .grid-informacoes {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
 }
 
-.menu-lateral-perfil {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 12px;
+.pagina-perfil .item-info {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  height: fit-content;
+  align-items: center;
+  gap: 14px;
+
+  min-width: 0;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #f1e5dd;
 }
 
-.item-menu-perfil {
-  text-decoration: none;
-  color: #475569;
-  padding: 12px 16px;
-  border-radius: 8px;
+.pagina-perfil .texto-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.pagina-perfil .rotulo-info {
+  color: #82716b;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
   font-weight: 500;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-}
-
-.item-menu-perfil:hover,
-.item-menu-perfil.ativo {
-  background-color: #ffedd5;
-  color: #c2410c;
-  font-weight: 600;
-}
-
-/* Secção de Detalhes */
-.detalhes-perfil {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.bloco-detalhes {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 28px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-}
-
-.titulo-bloco {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 12px;
-}
-
-.grid-informacoes {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.item-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.rotulo-info {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
-.valor-info {
-  font-size: 0.95rem;
-  color: #0f172a;
-  font-weight: 500;
+.pagina-perfil .valor-info {
+  color: #342019;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
-/* Formulário de Edição Interno */
-.formulario-edicao {
+/* =====================================
+   EDIÇÃO DO PERFIL
+   ===================================== */
+
+.pagina-perfil .formulario-edicao {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.pagina-perfil .formulario-edicao .grupo-campo {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 7px;
 }
 
-.grupo-campo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.pagina-perfil .formulario-edicao .rotulo-campo {
+  color: #38241d;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.rotulo-campo {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #334155;
-}
+.pagina-perfil .formulario-edicao .campo-texto {
+  width: 100%;
+  height: 46px;
+  padding: 10px 13px;
+  box-sizing: border-box;
 
-.campo-texto {
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 0.95rem;
+  background: white;
+  border: 1px solid #e7c4b8;
+  border-radius: 11px;
   outline: none;
-  color: #0f172a;
-  transition: border-color 0.2s;
+
+  color: #342019;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
 }
 
-.campo-texto:focus {
-  border-color: #c2410c;
-  box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+.pagina-perfil .formulario-edicao .campo-texto:focus {
+  border-color: #a9533d;
+  box-shadow: 0 0 0 3px rgba(169, 83, 61, 0.1);
 }
 
-.botao-salvar-perfil {
-  background-color: #c2410c;
-  color: #ffffff;
+.pagina-perfil .botao-salvar-perfil {
+  grid-column: 1 / -1;
+
+  padding: 13px;
+  margin-top: 6px;
+
+  background: #a9533d;
   border: none;
-  padding: 12px;
-  border-radius: 8px;
+  border-radius: 12px;
+
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 10px;
 }
 
-.botao-salvar-perfil:hover {
-  background-color: #9a3412;
+.pagina-perfil .botao-salvar-perfil:hover {
+  background: #8e402d;
 }
 
-/* Alertas */
-.mensagem-alerta {
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  margin-bottom: 20px;
+/* =====================================
+   SEÇÃO CURRÍCULO
+   ===================================== */
+
+.pagina-perfil .descricao-curriculo {
+  margin: 0 0 22px;
+  color: #82716b;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
-.mensagem-alerta.sucesso {
-  background-color: #dcfce7;
+.pagina-perfil .input-arquivo-curriculo {
+  display: none;
+}
+
+.pagina-perfil .area-upload-curriculo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 38px 22px;
+  background: #fff8f4;
+
+  border: 2px dashed #e3b5a4;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.pagina-perfil .icone-upload-curriculo {
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fbe3d5;
+  color: #a9533d;
+  border-radius: 18px;
+}
+
+.pagina-perfil .area-upload-curriculo h3 {
+  margin: 0;
+  color: #342019;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.pagina-perfil .area-upload-curriculo p {
+  margin: 0;
+  max-width: 350px;
+  color: #82716b;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.pagina-perfil .botao-upload-curriculo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 8px;
+  padding: 12px 22px;
+
+  background: #a9533d;
+  color: white;
+  border: none;
+  border-radius: 12px;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagina-perfil .botao-upload-curriculo:hover {
+  background: #8e402d;
+}
+
+.pagina-perfil .formatos-curriculo {
+  color: #948078;
+  font-size: 11px;
+}
+
+/* Currículo selecionado */
+
+.pagina-perfil .curriculo-selecionado {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pagina-perfil .arquivo-curriculo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 18px;
+  background: #fff8f4;
+  border: 1px solid #e9c8ba;
+  border-radius: 14px;
+}
+
+.pagina-perfil .icone-arquivo-curriculo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+
+  background: #fbe3d5;
+  color: #a9533d;
+  border-radius: 12px;
+}
+
+.pagina-perfil .informacoes-arquivo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.pagina-perfil .informacoes-arquivo strong {
+  font-size: 13px;
+  color: #342019;
+  overflow-wrap: anywhere;
+}
+
+.pagina-perfil .informacoes-arquivo span {
+  color: #82716b;
+  font-size: 11px;
+}
+
+/* Ações do currículo */
+
+.pagina-perfil .acoes-curriculo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pagina-perfil .acao-curriculo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+
+  background: #fff3ee;
+  color: #a9533d;
+  border: 1px solid #e7c4b8;
+  border-radius: 10px;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pagina-perfil .acao-curriculo:hover {
+  background: #fbe3d5;
+}
+
+.pagina-perfil .acao-curriculo.remover {
+  color: #b42318;
+  background: #fff5f4;
+  border-color: #f0c3c0;
+}
+
+/* PDF */
+
+.pagina-perfil .previa-curriculo h3 {
+  color: #342019;
+  font-size: 15px;
+}
+
+.pagina-perfil .visualizador-curriculo {
+  width: 100%;
+  height: 490px;
+
+  border: 1px solid #e7c4b8;
+  border-radius: 12px;
+  background: white;
+}
+
+.pagina-perfil .aviso-curriculo,
+.pagina-perfil .aviso-armazenamento {
+  margin-top: 18px;
+  color: #82716b;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* =====================================
+   OUTRAS SEÇÕES E ALERTAS
+   ===================================== */
+
+.pagina-perfil .conteudo-em-breve {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 180px;
+}
+
+.pagina-perfil .conteudo-em-breve p {
+  color: #82716b;
+  font-size: 13px;
+}
+
+.pagina-perfil .mensagem-alerta {
+  padding: 13px 17px;
+  margin-bottom: 22px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.pagina-perfil .mensagem-alerta.sucesso {
+  background: #dcfce7;
   color: #166534;
   border: 1px solid #bbf7d0;
+}
+
+.pagina-perfil .mensagem-alerta.erro {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* =====================================
+   RESPONSIVIDADE
+   ===================================== */
+
+@media (max-width: 900px) {
+  .pagina-perfil .corpo-perfil {
+    grid-template-columns: 230px minmax(0, 1fr);
+  }
+
+  .pagina-perfil .grid-informacoes {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .pagina-perfil .conteudo-perfil {
+    padding: 24px 14px 60px;
+  }
+
+  .pagina-perfil .cartao-perfil-topo {
+    flex-wrap: wrap;
+    padding: 22px;
+  }
+
+  .pagina-perfil .avatar-grande {
+    width: 70px;
+    height: 70px;
+  }
+
+  .pagina-perfil .nome-usuario {
+    font-size: 22px;
+  }
+
+  .pagina-perfil .botao-editar-perfil {
+    width: 100%;
+  }
+
+  .pagina-perfil .corpo-perfil {
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-perfil .bloco-detalhes {
+    padding: 22px 18px;
+  }
+
+  .pagina-perfil .formulario-edicao {
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-perfil .acoes-curriculo {
+    flex-direction: column;
+  }
+
+  .pagina-perfil .acao-curriculo {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pagina-perfil .visualizador-curriculo {
+    height: 350px;
+  }
 }

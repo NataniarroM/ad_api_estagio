@@ -22,7 +22,7 @@ def simular_cursos(page):
                 content_type="application/json",
                 headers={"Access-Control-Allow-Origin": "*"},
                 body=json.dumps([
-                    {"id": 1, "nome": "Administração"}
+                    {"id_curso": 1, "nome": "Administração"}
                 ])
             )
 
@@ -91,7 +91,7 @@ def test_selecionar_tipo_conta(page: Page):
     page.goto(URL)
 
     usuario = page.get_by_role(
-        "button", name="Usuario", exact=True
+        "button", name="Usuário", exact=True
     )
     recrutador = page.get_by_role(
         "button", name="Recrutador", exact=True
@@ -144,3 +144,60 @@ def test_cadastro_com_sucesso(page: Page):
     expect(
         page.get_by_text("Conta criada com sucesso!")
     ).to_be_visible()
+
+def test_cadastro_envia_dados_corretos(page: Page):
+    simular_cursos(page)
+    dados_enviados = []
+
+    def verificar_requisicao(route):
+        headers = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+
+        if route.request.method == "OPTIONS":
+            route.fulfill(status=204, headers=headers)
+            return
+
+        dados_enviados.append(
+            json.loads(route.request.post_data)
+        )
+
+        route.fulfill(
+            status=201,
+            content_type="application/json",
+            headers=headers,
+            body="{}"
+        )
+
+    page.route(
+        "http://127.0.0.1:8000/auth/cadastro",
+        verificar_requisicao
+    )
+
+    page.goto(URL)
+
+    page.get_by_role(
+        "button", name="Recrutador", exact=True
+    ).click()
+
+    preencher_cadastro(page)
+
+    page.get_by_role(
+        "button", name="Cadastrar", exact=True
+    ).click()
+
+    expect(
+        page.get_by_text("Conta criada com sucesso!")
+    ).to_be_visible()
+
+    assert len(dados_enviados) == 1
+
+    dados = dados_enviados[0]
+
+    assert dados["tipo_usuario"] == "recrutador"
+    assert "tipo" not in dados
+    assert dados["telefone"] == "11988888888"
+    assert dados["semestre"] == 3
+    assert dados["id_curso"] == 1
