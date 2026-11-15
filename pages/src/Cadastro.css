@@ -1,170 +1,371 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* ==============================
+   PÁGINA DE CADASTRO ESTAGUP
+   ============================== */
+
 .pagina-cadastro {
   min-height: 100vh;
-  background-color: #f8fafc;
   display: flex;
   flex-direction: column;
-  font-family: 'Inter', sans-serif;
+  background: #fff7f2;
+  font-family: 'Poppins', sans-serif;
 }
 
-.conteudo-cadastro {
+/* Fundo */
+
+.pagina-cadastro .conteudo-cadastro {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 20px;
-}
-
-.cartao-cadastro {
-  background: #ffffff;
-  width: 100%;
-  max-width: 480px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  padding: 32px;
-  border: 1px solid #e2e8f0;
+  padding: 45px 20px;
   box-sizing: border-box;
 }
 
-.titulo-pagina {
-  font-size: 1.75rem;
-  color: #1e293b;
-  margin: 0 0 8px 0;
-  font-weight: 700;
-  text-align: center;
+/* Cartão */
+
+.pagina-cadastro .cartao-cadastro {
+  width: 100%;
+  max-width: 570px;
+  padding: 30px 34px 36px;
+  box-sizing: border-box;
+
+  background: rgba(255, 251, 249, 0.97);
+  border: 1px solid #f0dfd5;
+  border-radius: 24px;
+
+  box-shadow: 0 15px 40px rgba(91, 47, 31, 0.12);
 }
 
-.subtitulo-pagina {
-  font-size: 0.95rem;
-  color: #64748b;
-  margin: 0 0 24px 0;
-  text-align: center;
-}
+/* Logo acadêmica */
 
-.seletor-tipo-conta {
+.pagina-cadastro .logo-cadastro {
   display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  background: #f1f5f9;
-  padding: 4px;
-  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
-.botao-tipo {
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 10px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #64748b;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
+.pagina-cadastro .logo-cadastro svg {
+  display: block;
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
 }
 
-.botao-tipo.ativo {
-  background: #ffffff;
-  color: #d9531e;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
+/* Título */
 
-.mensagem-alerta {
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  margin-bottom: 20px;
+.pagina-cadastro .titulo-pagina {
+  margin: 0 0 4px;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 1.3;
   text-align: center;
+  color: #342019;
+}
+
+.pagina-cadastro .titulo-pagina span {
+  color: #a9533d;
+}
+
+/* Subtítulo */
+
+.pagina-cadastro .subtitulo-pagina {
+  margin: 0 0 25px;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  color: #82716b;
+}
+
+/* ==============================
+   SELETOR DE TIPO DE CONTA
+   ============================== */
+
+.pagina-cadastro .seletor-tipo-conta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px;
+  margin-bottom: 24px;
+
+  border: 1px solid #eadad1;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.pagina-cadastro .botao-tipo {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+
+  padding: 11px 5px;
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+  color: #574840;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
   font-weight: 500;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.mensagem-alerta.sucesso {
-  background-color: #dcfce7;
-  color: #166534;
-  border: 1px solid #bbf7d0;
+.pagina-cadastro .botao-tipo svg {
+  flex-shrink: 0;
 }
 
-.mensagem-alerta.erro {
-  background-color: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
+.pagina-cadastro .botao-tipo.ativo {
+  background: #fbe8df;
+  color: #a9533d;
+  font-weight: 600;
 }
 
-.formulario-cadastro {
+.pagina-cadastro .botao-tipo:hover:not(.ativo) {
+  background: #fff4ef;
+}
+
+/* ==============================
+   FORMULÁRIO
+   ============================== */
+
+.pagina-cadastro .formulario-cadastro {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
 }
 
-.grupo-campo {
+.pagina-cadastro .grupo-campo {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.rotulo-campo {
-  font-size: 0.85rem;
+.pagina-cadastro .rotulo-campo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
   font-weight: 600;
-  color: #334155;
+  color: #38241d;
 }
 
-.caixa-campo {
+/* Caixa dos campos */
+
+.pagina-cadastro .grupo-campo .caixa-campo {
   display: flex;
   align-items: center;
-}
+  gap: 12px;
 
-.campo-texto {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  color: #1e293b;
-  outline: none;
-  transition: border-color 0.2s;
+  height: 48px;
+  padding: 0 14px;
   box-sizing: border-box;
-  background-color: #fff;
+
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e7c4b8;
+  border-radius: 12px;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.campo-texto:focus {
-  border-color: #d9531e;
-  box-shadow: 0 0 0 3px rgba(217, 83, 30, 0.15);
+.pagina-cadastro .caixa-campo:focus-within {
+  border-color: #a9533d;
+  box-shadow: 0 0 0 3px rgba(169, 83, 61, 0.1);
 }
 
-.botao-cadastrar {
-  background-color: #d9531e;
-  color: white;
+/* Ícones dos campos */
+
+.pagina-cadastro .caixa-campo > svg {
+  flex-shrink: 0;
+  color: #a9533d;
+}
+
+/* Inputs */
+
+.pagina-cadastro .caixa-campo .campo-texto {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+
+  background: transparent;
   border: none;
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  color: #342019;
+}
+
+.pagina-cadastro .caixa-campo .campo-texto:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+.pagina-cadastro .campo-texto::placeholder {
+  color: #93827a;
+}
+
+/* Curso */
+
+.pagina-cadastro .caixa-campo select.campo-texto {
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 8px;
+  color: #342019;
 }
 
-.botao-cadastrar:hover:not(:disabled) {
-  background-color: #c24514;
+/* Botão de visualizar senha */
+
+.pagina-cadastro .botao-ver-senha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  padding: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+
+  color: #664b40;
+  cursor: pointer;
 }
 
-.botao-cadastrar:disabled {
+.pagina-cadastro .botao-ver-senha:hover {
+  color: #a9533d;
+}
+
+/* ==============================
+   BOTÃO CADASTRAR
+   ============================== */
+
+.pagina-cadastro .botao-cadastrar {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  padding: 11px 16px;
+
+  background: #a9533d;
+  border: none;
+  border-radius: 12px;
+
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pagina-cadastro .botao-cadastrar:hover:not(:disabled) {
+  background: #8e402d;
+}
+
+.pagina-cadastro .botao-cadastrar:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.rodape-card {
+/* ==============================
+   RODAPÉ DO CARTÃO
+   ============================== */
+
+.pagina-cadastro .rodape-card {
+  margin-top: 27px;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
   text-align: center;
-  margin-top: 24px;
-  font-size: 0.9rem;
-  color: #64748b;
+  color: #82716b;
 }
 
-.link-entrar {
-  color: #d9531e;
+.pagina-cadastro .link-entrar {
+  color: #a9533d;
   font-weight: 600;
   text-decoration: none;
 }
 
-.link-entrar:hover {
+.pagina-cadastro .link-entrar:hover {
   text-decoration: underline;
+}
+
+/* ==============================
+   MENSAGENS DE ALERTA
+   ============================== */
+
+.pagina-cadastro .mensagem-alerta {
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.pagina-cadastro .mensagem-alerta.sucesso {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.pagina-cadastro .mensagem-alerta.erro {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* ==============================
+   RESPONSIVIDADE
+   ============================== */
+
+@media (max-width: 600px) {
+  .pagina-cadastro .conteudo-cadastro {
+    padding: 24px 14px;
+  }
+
+  .pagina-cadastro .cartao-cadastro {
+    padding: 26px 20px 30px;
+  }
+
+  .pagina-cadastro .titulo-pagina {
+    font-size: 25px;
+  }
+
+  .pagina-cadastro .logo-cadastro svg {
+    width: 66px;
+    height: 66px;
+  }
+
+  .pagina-cadastro .botao-tipo {
+    gap: 4px;
+    font-size: 10px;
+  }
+
+  .pagina-cadastro .botao-tipo svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 390px) {
+  .pagina-cadastro .botao-tipo {
+    flex-direction: column;
+    gap: 3px;
+  }
 }

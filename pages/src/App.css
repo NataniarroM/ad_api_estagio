@@ -1,15 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
 .pagina-principal {
   min-height: 100vh;
   background-color: #fafaf9;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #1c1917;
 }
-
 .secao-topo {
   text-align: center;
   padding: 50px 20px 40px;
   max-width: 900px;
   margin: 0 auto;
+  background-image: url('./assets/banner-estagup.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
 }
 
 .titulo-principal {
@@ -125,12 +131,17 @@
   gap: 20px;
 }
 
-.bar{
-  width: 1280px; ;
+
+.bar {
+  width: 100%;
+  max-width: 1280px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
-  justify-content: right;
-  
+  justify-content: flex-end;
 }
+
 
 .botao-perfil img{
   width: 30px;
@@ -149,4 +160,213 @@
   justify-content: center;
   transition: background-color 0.2s;
   margin-left: 20px;
+  
 }
+
+.secao-topo {
+  background-color: #f8eae2;
+  background-image: url('./assets/banner-estagup.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+/* Título do banner EstagUp */
+
+.secao-topo .titulo-principal {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  color: #291b17;
+  text-align: left;
+  margin-bottom: 12px;
+}
+
+.secao-topo .titulo-destaque {
+  display: block;
+  color: #a9533d;
+}
+
+/* Subtítulo */
+
+.secao-topo .subtitulo-principal {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #71615a;
+  line-height: 1.6;
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+
+/* Barra de pesquisa unificada */
+
+.pagina-principal .secao-topo .barra-pesquisa {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 1000px;
+  margin: 28px 0 0;
+  padding: 6px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #f1e8e2;
+  border-radius: 999px;
+  box-shadow: 0 8px 25px rgba(82, 46, 35, 0.12);
+}
+
+.pagina-principal .secao-topo .barra-pesquisa .grupo-input {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  max-width: none;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pagina-principal .secao-topo .barra-pesquisa .grupo-input img {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.pagina-principal .secao-topo .barra-pesquisa .campo-texto {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+.pagina-principal .secao-topo .barra-pesquisa .separador {
+  width: 1px;
+  height: 28px;
+  margin: 0;
+  background: #ded1c9;
+  flex-shrink: 0;
+}
+
+.pagina-principal .secao-topo .barra-pesquisa .botao-buscar {
+  margin: 0;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 999px;
+  background: #a9533d;
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pagina-principal .secao-topo .barra-pesquisa .botao-buscar:hover {
+  background: #88412f;
+}
+
+@media (max-width: 600px) {
+  .pagina-principal .secao-topo .barra-pesquisa {
+    flex-direction: column;
+    border-radius: 20px;
+  }
+
+  .pagina-principal .secao-topo .barra-pesquisa .grupo-input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pagina-principal .secao-topo .barra-pesquisa .separador {
+    width: 100%;
+    height: 1px;
+  }
+
+  .pagina-principal .secao-topo .barra-pesquisa .botao-buscar {
+    width: 100%;
+  }
+}
+
+/* =====================================
+   CORREÇÃO DO BANNER DA HOME ESTAGUP
+   ===================================== */
+
+.pagina-principal .secao-topo {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  box-sizing: border-box;
+
+  padding: 65px max(24px, calc((100% - 1100px) / 2)) 65px;
+
+  background-color: #fff4ee;
+  background-image: url('./assets/banner-estagup.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  text-align: left;
+}
+
+/* Título da Home */
+
+.pagina-principal .secao-topo .titulo-principal {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(34px, 4vw, 54px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #291b17;
+  text-align: left;
+  margin: 0 0 14px;
+}
+
+/* Destaque terracota */
+
+.pagina-principal .secao-topo .titulo-destaque {
+  color: #a9533d;
+}
+
+/* Subtítulo */
+
+.pagina-principal .secao-topo .subtitulo-principal {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  color: #71615a;
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+/* Barra de pesquisa */
+
+.pagina-principal .secao-topo .barra-pesquisa {
+  width: 100%;
+  max-width: 1000px;
+  margin: 28px 0 0;
+  box-sizing: border-box;
+}
+
+/* Responsividade */
+
+@media (max-width: 700px) {
+  .pagina-principal .secao-topo {
+    padding: 45px 20px 55px;
+    background-position: center;
+  }
+
+  .pagina-principal .secao-topo .titulo-principal {
+    font-size: 34px;
+  }
+}
+

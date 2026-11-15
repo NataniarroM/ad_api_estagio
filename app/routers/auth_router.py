@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.database import get_db
 from app.models import Usuario
-from app.seguranca import get_usuario_atual
+from app.seguranca import get_usuario_db
 
 # Cria o grupo de rotas.
 #   prefix="/auth"  -> todos os endpoints abaixo começam com /auth
@@ -217,6 +217,14 @@ def login(dados: LoginEntrada):
 # ---------- ENDPOINT 3: PERFIL (protegido) ----------
 
 @router.get("/perfil")
-def meu_perfil(usuario: dict = Depends(get_usuario_atual)):
+def meu_perfil(usuario: Usuario = Depends(get_usuario_db)):
     """Endpoint protegido: só responde se o token for válido."""
-    return usuario
+    return {
+        "id_usuario": usuario.id_usuario,
+        "nome": usuario.nome,
+        "email": usuario.email,
+        "telefone": usuario.telefone,
+        "semestre": usuario.semestre,
+        "id_curso": usuario.id_curso,
+        "tipo_usuario": usuario.tipo_usuario,
+    }
