@@ -59,7 +59,7 @@ def atualizar_vaga(
 
     if not vaga:
         raise HTTPException(status_code=404, detail="Vaga não encontrada.")
-    if not empresa or vaga.id_empresa != empresa.id_empresa:
+    if usuario.tipo_usuario != "administrador" and (not empresa or vaga.id_empresa != empresa.id_empresa):
         raise HTTPException(status_code=403, detail="Você não tem permissão para editar esta vaga.")
 
     for campo, valor in dados.model_dump(exclude_unset=True).items():
@@ -80,7 +80,7 @@ def deletar_vaga(
 
     if not vaga:
         raise HTTPException(status_code=404, detail="Vaga não encontrada.")
-    if not empresa or vaga.id_empresa != empresa.id_empresa:
+    if usuario.tipo_usuario != "administrador" and (not empresa or vaga.id_empresa != empresa.id_empresa):
         raise HTTPException(status_code=403, detail="Você não tem permissão para excluir esta vaga.")
 
     db.delete(vaga)

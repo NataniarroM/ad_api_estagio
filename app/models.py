@@ -49,7 +49,9 @@ class Vaga(Base):
     id_vaga = Column(Integer, primary_key=True, index=True)
     id_empresa = Column(Integer,
                         ForeignKey("empresa.id_empresa", ondelete="RESTRICT"),
-                        nullable=False, unique=True)
+                        nullable=False)
+
+    titulo = Column(String(150), nullable=False)
 
     titulo = Column(String(150), nullable=False)
     descricao = Column(Text, nullable=False)
