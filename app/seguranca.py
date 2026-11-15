@@ -91,3 +91,21 @@ def get_usuario_db(
             detail="Usuário autenticado no Firebase, mas não cadastrado no banco de dados.",
         )
     return usuario
+
+
+
+def exigir_administrador(usuario: Usuario = Depends(get_usuario_db)) -> Usuario:
+    """Porteiro de ADMINISTRADOR: só deixa passar quem tem tipo_usuario "administrador".
+
+    Como usar em qualquer rota que só o admin pode acessar:
+        admin: Usuario = Depends(exigir_administrador)
+
+    Ele já inclui o login: sem token válido responde 401; com token de quem
+    não é administrador responde 403 ("proibido").
+    """
+    if usuario.tipo_usuario != "administrador":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Apenas administradores podem fazer esta operação.",
+        )
+    return usuario
