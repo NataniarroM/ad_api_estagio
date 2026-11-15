@@ -10,16 +10,17 @@ from app.seguranca import get_usuario_db
 
 router = APIRouter(prefix="/empresas", tags=["Empresas"])
 
+
 @router.post("/", response_model=EmpresaResponse, status_code=status.HTTP_201_CREATED)
 def criar_empresa(
     dados: EmpresaCreate,
     db: Session = Depends(get_db),
     usuario: Usuario = Depends(get_usuario_db)
 ):
-    if usuario.tipo_usuario != "empresa":
+    if usuario.tipo_usuario != "recrutador":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Apenas usuários do tipo 'empresa' podem cadastrar dados empresariais."
+            detail="Apenas usuários do tipo 'recrutador' podem cadastrar dados empresariais."
         )
 
     nova_empresa = Empresa(id_usuario=usuario.id_usuario, **dados.model_dump())
@@ -35,9 +36,11 @@ def criar_empresa(
             detail="Este usuário já possui empresa vinculada ou o CNPJ já está cadastrado."
         )
 
+
 @router.get("/", response_model=List[EmpresaResponse])
 def listar_empresas(db: Session = Depends(get_db)):
     return db.query(Empresa).all()
+
 
 @router.get("/{id_empresa}", response_model=EmpresaResponse)
 def buscar_empresa(id_empresa: int, db: Session = Depends(get_db)):

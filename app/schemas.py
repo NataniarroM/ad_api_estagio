@@ -59,7 +59,7 @@ class CandidaturaCreate(BaseModel):
 class CandidaturaResponse(CandidaturaCreate):
     id_candidatura: int
     id_usuario: int
-    status: str
+    status_candidatura: str
 
     class Config:
         from_attributes = True
