@@ -1,3 +1,32 @@
+.acoes-admin-vaga {
+  margin-bottom: 24px;
+}
+
+.botao-excluir-vaga {
+  background: #ffffff;
+  color: #88412f;
+  border: 1px solid #a9533d;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botao-excluir-vaga:hover {
+  background: #f8efeb;
+}
+
+.botao-excluir-vaga:focus-visible {
+  outline: 3px solid #88412f;
+  outline-offset: 3px;
+}
+
+.botao-excluir-vaga:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .pagina-detalhes {
   min-height: 100vh;
   background-color: #f8fafc;

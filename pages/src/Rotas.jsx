@@ -4,7 +4,7 @@ import App from './App';
 import Cadastro from './Cadastro';
 import Login from './login'; // Verifique se o arquivo se chama 'login.jsx' ou 'Login.jsx'
 import Perfil from './Perfil';
-import Detalhes from './detalhes'; // Verifique se o arquivo se chama 'detalhes.jsx' ou 'Detalhes.jsx'
+import Detalhes from './Detalhes';
 import Favoritos from './Favoritos';
 import CadastroVaga from './CadastroVaga'; 
 import CadastraCurso from './CadastraCurso'; 
