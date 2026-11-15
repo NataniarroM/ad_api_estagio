@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. Importar o useNavigate
+import { useNavigate } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import CartaoVaga from './components/CartaoVaga';
 import './App.css';
@@ -9,17 +9,22 @@ import fav from './assets/favoritos.png';
 import perfil from './assets/perfil_icon.png';
 
 export default function App() {
-  const navigate = useNavigate(); // 2. Inicializar o navigate dentro do componente
+  const navigate = useNavigate();
   const [termoBusca, setTermoBusca] = useState('');
   const [localBusca, setLocalBusca] = useState('');
   const [vagas, setVagas] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const [tipoUsuario, setTipoUsuario] = useState(
+    () => localStorage.getItem('tipo_usuario') || ''
+  );
+
+  const API_URL = 'http://localhost:8000';
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/vagas/')
+    fetch(`${API_URL}/api/vagas/`)
       .then((resposta) => resposta.json())
       .then((dados) => {
-        setVagas(dados);
+        setVagas(Array.isArray(dados) ? dados : []);
         setCarregando(false);
       })
       .catch((erro) => {
@@ -27,6 +32,32 @@ export default function App() {
         setCarregando(false);
       });
   }, []);
+
+  // Busca o tipo_usuario em /auth/perfil igual ao Login.jsx
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      setTipoUsuario('');
+      return;
+    }
+
+    fetch(`${API_URL}/auth/perfil`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((dadosPerfil) => {
+        if (dadosPerfil?.tipo_usuario) {
+          setTipoUsuario(dadosPerfil.tipo_usuario);
+          localStorage.setItem('tipo_usuario', dadosPerfil.tipo_usuario);
+        }
+      })
+      .catch((erro) => console.error('Erro ao verificar perfil:', erro));
+  }, []);
+
+  const ehAdmin = tipoUsuario === 'administrador' || tipoUsuario === 'adm';
+  const ehRecrutador = tipoUsuario === 'recrutador';
+  const podeCadastrarVaga = ehRecrutador || ehAdmin;
+  const podeCadastrarCurso = ehAdmin;
 
   const irParaFavoritos = (e) => {
     e.preventDefault();
@@ -76,14 +107,37 @@ export default function App() {
           <button className="botao-buscar">Buscar</button>
         </div>
       </section>
-      <div className='bar'>
-      <button className="botao-favorito" onClick={irParaFavoritos} title="Ver Favoritos">
-        <img src={fav} alt="Favoritos" />
-      </button>
-      <button className="botao-perfil" onClick={irParaPerfil} title="Ver Perfil">
-        <img src={perfil} alt="Perfil" />
-      </button>
+
+      <div className="bar">
+        <button className="botao-favorito" onClick={irParaFavoritos} title="Ver Favoritos">
+          <img src={fav} alt="Favoritos" />
+        </button>
+
+        <button className="botao-perfil" onClick={irParaPerfil} title="Ver Perfil">
+          <img src={perfil} alt="Perfil" />
+        </button>
+
+        {podeCadastrarVaga && (
+          <button
+            type="button"
+            className="botao-gestao"
+            onClick={() => navigate('/cadastrovaga')}
+          >
+            + Cadastrar Vaga
+          </button>
+        )}
+
+        {podeCadastrarCurso && (
+          <button
+            type="button"
+            className="botao-gestao"
+            onClick={() => navigate('/cadastracurso')}
+          >
+            + Cadastrar Curso
+          </button>
+        )}
       </div>
+
       {/* Lista de Vagas */}
       <main className="secao-conteudo">
         <div className="cabecalho-secao">
@@ -93,12 +147,11 @@ export default function App() {
         </div>
 
         {carregando ? (
-          <p style={{ textAlign: 'center', color: '#666', padding: '20px' }}>
+          <p className="texto-carregando">
             A carregar vagas do banco de dados...
           </p>
         ) : (
           <div className="grade-vagas">
-            {/* 3. A key única foi adicionada aqui para corrigir o aviso do console */}
             {vagas.map((item) => (
               <CartaoVaga key={item.id_vaga || item.id} vaga={item} />
             ))}
