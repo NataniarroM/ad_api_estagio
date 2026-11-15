@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import date
 from decimal import Decimal
@@ -63,3 +63,29 @@ class CandidaturaResponse(CandidaturaCreate):
 
     class Config:
         from_attributes = True
+
+#  SIX SEVENNNN
+
+# --- SCHEMAS DE CURSO ---
+# Os 3 níveis aceitos pelo banco (CHECK da tabela curso no schema.sql).
+
+NIVEIS_CURSO = "^(tecnologo|bacharelado|licenciatura)$"
+
+class CursoCreate(BaseModel):
+    """Dados que o front envia para CRIAR um curso."""
+    nome: str = Field(..., min_length=2, max_length=150)   # entre 2 e 150 letras
+    nivel: str = Field(..., pattern=NIVEIS_CURSO)          # só tecnologo, bacharelado ou licenciatura
+    ativo: bool = True                                     # se não vier, o curso nasce ativo
+
+class CursoUpdate(BaseModel):
+    """Dados para ATUALIZAR um curso. Todos opcionais: só muda o que for enviado."""
+    nome: Optional[str] = Field(None, min_length=2, max_length=150)
+    nivel: Optional[str] = Field(None, pattern=NIVEIS_CURSO)
+    ativo: Optional[bool] = None
+
+class CursoResponse(CursoCreate):
+    """O que a API devolve: os mesmos campos do CursoCreate + o id gerado pelo banco."""
+    id_curso: int
+
+    # Permite montar a resposta direto a partir do objeto do banco (Curso).
+    model_config = ConfigDict(from_attributes=True)
