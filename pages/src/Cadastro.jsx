@@ -40,12 +40,12 @@ export default function Cadastro() {
           nome: form.nome,
           email: form.email,
           senha: form.senha,
-          tipo: tipoConta,
-          // Convertendo telefone e semestre para números inteiros (int) conforme o seu back-end exige
-          telefone: form.telefone ? Number(form.telefone) : null,
+          tipo_usuario: tipoConta,
+          telefone: form.telefone || null,
           semestre: form.semestre ? Number(form.semestre) : null,
           id_curso: form.id_curso ? Number(form.id_curso) : null,
-        }),
+       }),
+
       });
 
       if (resposta.ok) {
@@ -124,7 +124,7 @@ export default function Cadastro() {
                 >
                   <option value="">-- Selecione o seu curso --</option>
                   
-              {cursos.map((curso) => (
+               {cursos.map((curso) => (
                   <option key={curso.id_curso} value={curso.id_curso}>
                 ID: {curso.id_curso} - {curso.nome}
                  </option>
