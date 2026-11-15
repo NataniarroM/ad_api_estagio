@@ -17,7 +17,7 @@ export default function Login() {
 
     try {
       // 1. Apontando para o Java na porta 8080
-      const resposta = await fetch('http://localhost:8080/auth/login', {
+      const resposta = await fetch('http://localhost:8000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export default function Login() {
       localStorage.setItem('access_token', token);
 
       // 2. Apontando para o Java na porta 8080 para pegar o perfil
-      const respostaPerfil = await fetch('http://localhost:8080/api/perfil', {
+      const respostaPerfil = await fetch('http://localhost:8000/auth/perfil', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

@@ -4,18 +4,17 @@ import Cabecalho from './components/Cabecalho';
 import './detalhes.css';
 
 export default function Detalhes() {
-  const { id } = useParams(); // Pega o ID da vaga que veio pela URL
+  const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [vaga, setVaga] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [inscrito, setInscrito] = useState(false);
   const [carregandoInscricao, setCarregandoInscricao] = useState(false);
 
-  // Busca os dados da vaga específica no FastAPI ao carregar a página
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/vagas/${id}`)
+    fetch(`http://localhost:8000/api/vagas/${id}`)
       .then((resposta) => {
         if (!resposta.ok) {
           throw new Error('Não foi possível carregar os detalhes da vaga.');
@@ -33,25 +32,44 @@ export default function Detalhes() {
       });
   }, [id]);
 
-  // Envia a candidatura para a API FastAPI
   const handleInscricao = async () => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      alert('Você precisa entrar na sua conta para se candidatar a esta vaga.');
+      navigate('/login');
+      return;
+    }
+
     setCarregandoInscricao(true);
     try {
-      const resposta = await fetch(`http://127.0.0.1:8000/api/vagas/candidatar`, {
+      const resposta = await fetch('http://localhost:8000/candidaturas/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          vaga_id: Number(id),
-          id_usuario: 1 // ID de usuário padrão por enquanto
+          id_vaga: Number(id),
         }),
       });
+
+      const dados = await resposta.json().catch(() => ({}));
 
       if (resposta.ok) {
         setInscrito(true);
       } else {
-        alert('Erro ao realizar candidatura. Tente novamente.');
+        if (resposta.status === 401) {
+          localStorage.removeItem('access_token');
+          alert('Sua sessão expirou. Faça login novamente.');
+          navigate('/login');
+          return;
+        }
+
+        const detalhe = Array.isArray(dados.detail)
+          ? dados.detail.map((d) => d.msg).join(', ')
+          : dados.detail;
+        alert(detalhe || 'Erro ao realizar candidatura. Tente novamente.');
       }
     } catch (err) {
       console.error('Erro de conexão:', err);
@@ -64,9 +82,7 @@ export default function Detalhes() {
   if (carregando) {
     return (
       <div className="pagina-detalhes">
-        <p style={{ textAlign: 'center', marginTop: '50px', color: '#666' }}>
-          A carregar detalhes da vaga...
-        </p>
+        <p className="mensagem-carregando">A carregar detalhes da vaga...</p>
       </div>
     );
   }
@@ -74,8 +90,8 @@ export default function Detalhes() {
   if (erro || !vaga) {
     return (
       <div className="pagina-detalhes">
-        <div className="container-vaga" style={{ textAlign: 'center', marginTop: '50px' }}>
-          <p style={{ color: '#ef4444', marginBottom: '20px' }}>{erro || 'Vaga não encontrada.'}</p>
+        <div className="container-vaga estado-erro">
+          <p className="texto-erro">{erro || 'Vaga não encontrada.'}</p>
           <button className="botao-voltar" onClick={() => navigate('/')}>
             &larr; Voltar às vagas
           </button>
@@ -83,6 +99,11 @@ export default function Detalhes() {
       </div>
     );
   }
+
+  const nomeEmpresa =
+    typeof vaga.empresa === 'object' && vaga.empresa !== null
+      ? vaga.empresa.nome
+      : vaga.empresa;
 
   return (
     <div className="pagina-detalhes">
@@ -94,7 +115,10 @@ export default function Detalhes() {
         <div className="cabecalho-vaga">
           <div>
             <h1>{vaga.titulo}</h1>
-            <h2>{vaga.empresa} &bull; <span className="local-vaga">{vaga.local || vaga.cidade || 'Localização não informada'}</span></h2>
+            <h2>
+              {nomeEmpresa || 'Empresa confidencial'} &bull;{' '}
+              <span className="local-vaga">{vaga.local || vaga.cidade || 'Localização não informada'}</span>
+            </h2>
           </div>
           <div className="badges-vaga">
             <span className="badge tipo">{vaga.tipo || vaga.modalidade || 'Estágio'}</span>
@@ -147,8 +171,8 @@ export default function Detalhes() {
               ✅ Candidatura realizada com sucesso! A empresa entrará em contacto em breve.
             </div>
           ) : (
-            <button 
-              className="botao-inscrever" 
+            <button
+              className="botao-inscrever"
               onClick={handleInscricao}
               disabled={carregandoInscricao}
             >
