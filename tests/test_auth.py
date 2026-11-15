@@ -224,12 +224,10 @@ def test_perfil_token_valido(mock_verify, client, banco):
 
 
 @patch("app.seguranca.auth.verify_id_token")
-def test_perfil_so_confere_o_token(mock_verify, client):
-    # /auth/perfil só confere o token no Firebase e devolve os dados dele;
-    # não consulta o banco. Por isso responde 200 mesmo sem linha em `usuario`.
+def test_perfil_usuario_fora_do_banco(mock_verify, client):
+    # Token válido no Firebase, mas sem linha na tabela usuario -> 404.
     mock_verify.return_value = {"uid": "desconhecido", "email": "x@email.com"}
 
     resposta = client.get("/auth/perfil", headers={"Authorization": "Bearer abc"})
 
-    assert resposta.status_code == 200
-    assert resposta.json()["uid"] == "desconhecido"
+    assert resposta.status_code == 404
