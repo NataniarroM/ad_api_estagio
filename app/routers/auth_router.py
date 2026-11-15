@@ -146,7 +146,7 @@ def cadastrar(dados: CadastroEntrada, db: Session = Depends(get_db)):
 # ---------- ENDPOINT 2: LOGIN ----------
 
 @router.post("/login")
-def login(dados: LoginEntrada):
+def login(dados: LoginEntrada, db: Session = Depends(get_db)):
     """Faz login no Firebase e devolve o token que o front-end vai usar."""
 
     # Sem a chave da API não dá para fazer login. Avisamos com clareza.
@@ -211,7 +211,23 @@ def login(dados: LoginEntrada):
 
     # Deu certo: pegamos o token ("idToken") da resposta do Firebase e devolvemos.
     # O front-end deve guardar esse token e enviá-lo nas próximas requisições.
-    return {"access_token": resposta.json()["idToken"], "token_type": "bearer"}
+    dados_firebase = resposta.json()
+
+    # "localId" é o uid do usuário no Firebase. Com ele achamos a linha dele na
+    # tabela usuario (o firebase_uid é o que liga os dois cadastros).
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.firebase_uid == dados_firebase.get("localId"))
+        .first()
+    )
+
+    return {
+        "access_token": dados_firebase["idToken"],
+        "token_type": "bearer",
+        # Se o usuário existe no Firebase mas não no banco, devolve None em vez de dar erro.
+        "tipo_usuario": usuario.tipo_usuario if usuario else None,
+        "id_usuario": usuario.id_usuario if usuario else None,
+    }
 
 
 # ---------- ENDPOINT 3: PERFIL (protegido) ----------
