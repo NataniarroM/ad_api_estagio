@@ -47,7 +47,7 @@ class CadastroEntrada(BaseModel):
     nome: str = Field(min_length=2, max_length=150)
     email: str = Field(pattern=PADRAO_EMAIL)
     senha: str = Field(min_length=6, max_length=100)
-    tipo_usuario: str = Field(default="usuario", pattern="^(usuario|recrutador|administrador)$")
+    tipo_usuario: str = Field(default="usuario", pattern="^(usuario|recrutador)$")
     id_curso: Optional[int] = None
     telefone: Optional[str] = Field(default=None, max_length=20)
     semestre: Optional[int] = Field(default=None, gt=0)
