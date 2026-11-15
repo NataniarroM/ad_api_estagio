@@ -35,10 +35,10 @@ class Empresa(Base):
                         ForeignKey("usuario.id_usuario", ondelete="RESTRICT"),
                         nullable=False, unique=True)
     
-    razao_social = Column(String(150), nullable=False)
+    razao_social = Column(String(150), nullable=True)
     nome_fantasia = Column(String(150), nullable=False)
-    cnpj = Column(String(18), nullable=False, unique=True)
-    cidade = Column(String(100), nullable=False)
+    cnpj = Column(String(18), nullable=True, unique=True)
+    cidade = Column(String(100), nullable=True)
     site = Column(String(255))
 
 

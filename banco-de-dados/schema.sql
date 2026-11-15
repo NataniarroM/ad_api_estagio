@@ -44,10 +44,10 @@ CREATE TABLE empresa (
     id_empresa INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_usuario INTEGER NOT NULL UNIQUE,
 
-    razao_social VARCHAR(150) NOT NULL,
+    razao_social VARCHAR(150),
     nome_fantasia VARCHAR(150) NOT NULL,
-    cnpj VARCHAR(18) NOT NULL UNIQUE,
-    cidade VARCHAR(100) NOT NULL,
+    cnpj VARCHAR(18) UNIQUE,
+    cidade VARCHAR(100),
     site VARCHAR(255),
 
     CONSTRAINT fk_empresa_usuario
