@@ -98,7 +98,7 @@ export default function Cadastro() {
           <p className="subtitulo-pagina">Comece a procurar as melhores oportunidades</p>
 
           <div className="seletor-tipo-conta">
-            {['usuario', 'recrutador', 'administrador'].map((tipo) => (
+            {['usuario', 'recrutador'].map((tipo) => (
               <button
                 key={tipo}
                 type="button"
@@ -109,6 +109,11 @@ export default function Cadastro() {
               </button>
             ))}
           </div>
+
+          <p className="subtitulo-pagina">
+            Contas de administrador são criadas pelo responsável pelo sistema.
+            Se você já tem uma, use a opção Entrar.
+          </p>
 
           {mensagem.texto && (
             <div className={`mensagem-alerta ${mensagem.tipo}`}>{mensagem.texto}</div>
