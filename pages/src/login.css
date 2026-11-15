@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
 .pagina-login {
   min-height: 100vh;
   background-color: #f8fafc;
@@ -161,4 +163,207 @@
 
 .link-cadastrar:hover {
   text-decoration: underline;
+}
+.pagina-login .conteudo-login {
+  background-image: url('./assets/fundo-login-estagup.png');
+  background-color: #fff7f2;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: calc(100vh - 75px);
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   ESTAGUP - ESTILO DA TELA DE LOGIN
+   ========================================= */
+
+.pagina-login {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Cartão central */
+.pagina-login .cartao-login {
+  width: 100%;
+  max-width: 460px;
+  box-sizing: border-box;
+  padding: 30px 34px 34px;
+
+  background: rgba(255, 251, 249, 0.97);
+  border: 1px solid #f0dfd5;
+  border-radius: 24px;
+  box-shadow: 0 15px 40px rgba(91, 47, 31, 0.12);
+}
+
+/* CORREÇÃO DA LOGO GIGANTE */
+.pagina-login .cartao-login .logo-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pagina-login .cartao-login .logo-login svg {
+  display: block;
+  width: 76px;
+  height: 76px;
+  max-width: 76px;
+  max-height: 76px;
+}
+
+/* Título */
+.pagina-login .cartao-login .titulo-pagina {
+  margin: 0 0 4px;
+  color: #342019;
+  font-family: 'Poppins', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.pagina-login .titulo-pagina span {
+  color: #a9533d;
+}
+
+/* Subtítulo */
+.pagina-login .cartao-login .subtitulo-pagina {
+  margin: 0 0 27px;
+  color: #82716b;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Campos */
+.pagina-login .formulario-login {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pagina-login .rotulo-campo {
+  color: #38241d;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pagina-login .grupo-campo .caixa-campo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  padding: 0 14px;
+
+  background: #ffffff;
+  border: 1px solid #e7c4b8;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.pagina-login .caixa-campo:focus-within {
+  border-color: #a9533d;
+  box-shadow: 0 0 0 3px rgba(169, 83, 61, 0.10);
+}
+
+/* Ícones dos campos */
+.pagina-login .caixa-campo > svg {
+  flex-shrink: 0;
+  color: #a9533d;
+}
+
+/* Remove a borda azul interna */
+.pagina-login .caixa-campo input.campo-texto {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+
+  color: #342019;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+}
+
+.pagina-login .campo-texto::placeholder {
+  color: #93827a;
+}
+
+/* Botão do olho */
+.pagina-login .botao-ver-senha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 4px;
+
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #664b40;
+  cursor: pointer;
+}
+
+/* Esqueceu a senha */
+.pagina-login .link-esqueci {
+  color: #a9533d;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Botão Entrar */
+.pagina-login .botao-entrar {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 12px;
+  padding: 10px 16px;
+
+  background: #a9533d;
+  border: none;
+  border-radius: 12px;
+
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagina-login .botao-entrar:hover {
+  background: #8e402d;
+}
+
+/* Rodapé */
+.pagina-login .rodape-card {
+  margin-top: 26px;
+  color: #82716b;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  text-align: center;
+}
+
+.pagina-login .link-cadastrar {
+  color: #a9533d;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Responsividade */
+@media (max-width: 520px) {
+  .pagina-login .cartao-login {
+    padding: 26px 20px;
+  }
+
+  .pagina-login .titulo-pagina {
+    font-size: 23px;
+  }
 }

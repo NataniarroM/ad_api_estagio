@@ -85,9 +85,16 @@ export default function App() {
       <Cabecalho />
 
       <section className="secao-topo">
-        <h1 className="titulo-principal">
-          Encontre seu<br />próximo estágio
-        </h1>
+        
+      
+       <h1 className="titulo-principal">
+        Encontre seu
+      <span className="titulo-destaque">
+        próximo estágio
+      </span>
+      </h1>
+
+
 
         <p className="subtitulo-principal">
           Conectando estudantes a grandes oportunidades.

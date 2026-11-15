@@ -91,7 +91,7 @@ def test_selecionar_tipo_conta(page: Page):
     page.goto(URL)
 
     usuario = page.get_by_role(
-        "button", name="Usuario", exact=True
+        "button", name="Usuário", exact=True
     )
     recrutador = page.get_by_role(
         "button", name="Recrutador", exact=True
