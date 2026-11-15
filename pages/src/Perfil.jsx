@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import fundoPerfil from './assets/fundo-login-estagup.png';
 import './Perfil.css';
@@ -117,13 +117,10 @@ function Icone({ nome, tamanho = 22 }) {
 
 export default function Perfil() {
 
-  // Dados de demonstração
+  const navigate = useNavigate();
+  const [carregando, setCarregando] = useState(true);
   const [perfil, setPerfil] = useState({
-    nome: 'Mariana Silva',
-    subtitulo: 'Estudante de Engenharia de Software',
-    email: 'mariana.silva@email.com',
-    telefone: '(11) 99999-0000',
-    local: 'São Paulo, SP'
+    nome: '', subtitulo: '', email: '', telefone: '', local: ''
   });
 
   const [rascunho, setRascunho] = useState(perfil);
@@ -139,6 +136,64 @@ export default function Perfil() {
   const [arquivoCv, setArquivoCv] = useState(null);
   const [urlCv, setUrlCv] = useState('');
   const [mostrarCv, setMostrarCv] = useState(false);
+
+  useEffect(() => {
+    const carregarPerfil = async () => {
+      const token = localStorage.getItem('access_token');
+
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const resposta = await fetch('http://localhost:8000/auth/perfil', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (resposta.status === 401) {
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('tipo_usuario');
+          navigate('/login');
+          return;
+        }
+
+        if (!resposta.ok) {
+          throw new Error('Não foi possível carregar os dados do perfil.');
+        }
+
+        const dados = await resposta.json();
+
+        const descricaoCargo =
+          dados.tipo_usuario === 'recrutador'
+            ? 'Recrutador'
+            : dados.tipo_usuario === 'administrador'
+            ? 'Administrador'
+            : dados.semestre
+            ? `Estudante • ${dados.semestre}º Semestre`
+            : 'Estudante';
+
+        setPerfil({
+          nome: dados.nome || 'Usuário',
+          subtitulo: descricaoCargo,
+          email: dados.email || '',
+          telefone: dados.telefone || 'Não informado',
+          local: dados.local || 'Não informado',
+          semestre: dados.semestre || '',
+          tipo_usuario: dados.tipo_usuario || 'usuario',
+        });
+      } catch (erro) {
+        console.error('Erro ao buscar perfil:', erro);
+        setMensagem({ tipo: 'erro', texto: erro.message });
+      } finally {
+        setCarregando(false);
+      }
+    };
+
+    carregarPerfil();
+  }, [navigate]);
 
   const inputCv = useRef(null);
 
@@ -334,6 +389,15 @@ export default function Perfil() {
   const tituloMenu = menu.find(
     (item) => item.id === menuAtivo
   );
+
+  if (carregando) {
+    return (
+      <div className="pagina-perfil">
+        <Cabecalho />
+        <main className="conteudo-perfil"><p role="status">Carregando perfil...</p></main>
+      </div>
+    );
+  }
 
   return (
     <div

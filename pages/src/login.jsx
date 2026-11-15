@@ -17,79 +17,67 @@ export default function Login() {
     texto: ''
   });
 
+  const API_URL = 'http://localhost:8000';
+
   const aoEnviarLogin = async (e) => {
     e.preventDefault();
     setCarregando(true);
     setMensagem({ tipo: '', texto: '' });
 
     try {
-      const resposta = await fetch(
-        'http://localhost:8080/auth/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, senha }),
-        }
-      );
+      const resposta = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, senha }),
+      });
 
-      const dados = await resposta.json();
+      let dados = {};
+      try {
+        dados = await resposta.json();
+      } catch {
+        /* resposta sem JSON */
+      }
 
       if (!resposta.ok) {
-        throw new Error(
-          dados.detail || 'E-mail ou senha incorretos.'
-        );
+        const detalhe = Array.isArray(dados.detail)
+          ? dados.detail.map((d) => d.msg).join(', ')
+          : dados.detail;
+        throw new Error(detalhe || `Erro ${resposta.status} ao fazer login.`);
       }
 
       const token = dados.access_token;
+      if (!token) throw new Error('O servidor não devolveu o token.');
       localStorage.setItem('access_token', token);
 
-      const respostaPerfil = await fetch(
-        'http://localhost:8080/api/perfil',
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const respostaPerfil = await fetch(`${API_URL}/auth/perfil`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (!respostaPerfil.ok) {
-        throw new Error(
-          'Erro ao carregar os dados do perfil.'
-        );
+        throw new Error(`Erro ao carregar o perfil (status ${respostaPerfil.status}).`);
       }
 
       const dadosPerfil = await respostaPerfil.json();
-      const tipoUsuario = dadosPerfil.tipo;
-
+      const tipoUsuario = dadosPerfil.tipo_usuario;
       localStorage.setItem('tipo_usuario', tipoUsuario);
 
-      setMensagem({
-        tipo: 'sucesso',
-        texto: 'Login efetuado com sucesso!'
-      });
+      setMensagem({ tipo: 'sucesso', texto: 'Login efetuado com sucesso!' });
 
       setTimeout(() => {
-        if (
-          tipoUsuario === 'recrutador' ||
-          tipoUsuario === 'empresa'
-        ) {
+        if (tipoUsuario === 'recrutador' || tipoUsuario === 'administrador') {
           navigate('/cadastrovaga');
         } else {
           navigate('/');
         }
       }, 1000);
-
     } catch (erro) {
       console.error('Erro no login:', erro);
-
       setMensagem({
         tipo: 'erro',
         texto:
-          erro.message ||
-          'Não foi possível conectar ao servidor.',
+          erro instanceof TypeError
+            ? 'Não foi possível conectar ao servidor (verifique a porta e o CORS).'
+            : erro.message,
       });
     } finally {
       setCarregando(false);

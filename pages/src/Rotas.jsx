@@ -6,7 +6,7 @@ import Login from './login'; // Verifique se o arquivo se chama 'login.jsx' ou '
 import Perfil from './Perfil';
 import Detalhes from './Detalhes'; // Verifique se o arquivo se chama 'detalhes.jsx' ou 'Detalhes.jsx'
 import Favoritos from './Favoritos';
-import CadastroVaga from './CadastraVaga'; 
+import CadastroVaga from './CadastroVaga'; 
 
 export default function Rotas() {
   return (

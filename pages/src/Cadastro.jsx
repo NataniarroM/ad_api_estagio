@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import fundoCadastro from './assets/fundo-login-estagup.png';
 import './Cadastro.css';
@@ -129,6 +129,7 @@ function LogoAcademica() {
 }
 
 export default function Cadastro() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     nome: '',
     email: '',
@@ -153,7 +154,7 @@ export default function Cadastro() {
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/cursos')
       .then((res) => res.ok ? res.json() : [])
-      .then((data) => setCursos(data))
+      .then((data) => setCursos(Array.isArray(data) ? data : []))
       .catch((err) => console.error('Erro ao buscar cursos:', err));
   }, []);
 
@@ -162,6 +163,13 @@ export default function Cadastro() {
       ...form,
       [e.target.name]: e.target.value
     });
+  };
+
+  const selecionarTipoConta = (tipo) => {
+    setTipoConta(tipo);
+    if (tipo !== 'usuario') {
+      setForm((anterior) => ({ ...anterior, semestre: '', id_curso: '' }));
+    }
   };
 
   // Envio do cadastro
@@ -173,6 +181,11 @@ export default function Cadastro() {
         tipo: 'erro',
         texto: 'As senhas não coincidem.'
       });
+      return;
+    }
+
+    if (form.senha.length < 6) {
+      setMensagem({ tipo: 'erro', texto: 'A senha deve ter no mínimo 6 caracteres.' });
       return;
     }
 
@@ -188,15 +201,15 @@ export default function Cadastro() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            nome: form.nome,
-            email: form.email,
+            nome: form.nome.trim(),
+            email: form.email.trim(),
             senha: form.senha,
             tipo_usuario: tipoConta,
-            telefone: form.telefone || null,
-            semestre: form.semestre
+            telefone: form.telefone.trim() || null,
+            semestre: tipoConta === 'usuario' && form.semestre
               ? Number(form.semestre)
               : null,
-            id_curso: form.id_curso
+            id_curso: tipoConta === 'usuario' && form.id_curso
               ? Number(form.id_curso)
               : null
           })
@@ -206,7 +219,7 @@ export default function Cadastro() {
       if (resposta.ok) {
         setMensagem({
           tipo: 'sucesso',
-          texto: 'Conta criada com sucesso!'
+          texto: 'Conta criada com sucesso! Redirecionando...'
         });
 
         setForm({
@@ -218,12 +231,16 @@ export default function Cadastro() {
           semestre: '',
           id_curso: ''
         });
+        setTimeout(() => navigate('/login'), 1500);
       } else {
-        const dadosErro = await resposta.json();
+        const dadosErro = await resposta.json().catch(() => ({}));
+        const detalhe = Array.isArray(dadosErro.detail)
+          ? dadosErro.detail.map((item) => item.msg).join(', ')
+          : dadosErro.detail;
 
         setMensagem({
           tipo: 'erro',
-          texto: dadosErro.detail || 'Erro ao realizar o cadastro.'
+          texto: detalhe || 'Erro ao realizar o cadastro.'
         });
       }
     } catch (erro) {
@@ -331,7 +348,7 @@ export default function Cadastro() {
                 className={`botao-tipo ${
                   tipoConta === tipo.valor ? 'ativo' : ''
                 }`}
-                onClick={() => setTipoConta(tipo.valor)}
+                onClick={() => selecionarTipoConta(tipo.valor)}
               >
                 <Icone nome={tipo.icone} tamanho={17} />
                 <span>{tipo.nome}</span>
@@ -352,7 +369,7 @@ export default function Cadastro() {
           >
 
             {/* Campos do formulário */}
-            {campos.map((campo) => {
+            {campos.filter((campo) => tipoConta === 'usuario' || campo.name !== 'semestre').map((campo) => {
               const ehSenha = campo.name === 'senha';
               const ehConfirmacao = campo.name === 'confirmarSenha';
               const temOlho = ehSenha || ehConfirmacao;
@@ -388,7 +405,7 @@ export default function Cadastro() {
                       autoComplete={campo.autoComplete}
                       inputMode={campo.inputMode}
                       min={campo.min}
-                      required
+                      required={!['telefone', 'semestre'].includes(campo.name)}
                     />
 
                     {temOlho && (
@@ -419,12 +436,12 @@ export default function Cadastro() {
             })}
 
             {/* Curso */}
-            <div className="grupo-campo">
+            {tipoConta === 'usuario' && (<div className="grupo-campo">
               <label
                 className="rotulo-campo"
                 htmlFor="cadastro-curso"
               >
-                Curso
+                Curso (Opcional)
               </label>
 
               <div className="caixa-campo">
@@ -436,7 +453,6 @@ export default function Cadastro() {
                   className="campo-texto"
                   value={form.id_curso}
                   onChange={handleChange}
-                  required
                 >
                   <option value="">
                     -- Selecione o seu curso --
@@ -452,7 +468,7 @@ export default function Cadastro() {
                   ))}
                 </select>
               </div>
-            </div>
+            </div>)}
 
             {/* Cadastrar */}
             <button

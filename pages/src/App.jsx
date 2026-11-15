@@ -24,7 +24,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/vagas')
+    fetch('http://127.0.0.1:8000/api/vagas/')
       .then((resposta) => resposta.json())
       .then((dados) => {
         setVagas(dados);
