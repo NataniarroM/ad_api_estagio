@@ -85,6 +85,6 @@ class Curso(Base):
     __tablename__ = "curso"
 
     id_curso = Column(Integer, primary_key=True, index=True)
-    nome = Column(String(150), nullable=False)
+    nome = Column("nome_curso", String(150), nullable=False)
     nivel = Column(String(20), nullable=False)
     ativo = Column(Boolean, nullable=False, default=True)
