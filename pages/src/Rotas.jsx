@@ -4,9 +4,10 @@ import App from './App';
 import Cadastro from './Cadastro';
 import Login from './login'; // Verifique se o arquivo se chama 'login.jsx' ou 'Login.jsx'
 import Perfil from './Perfil';
-import Detalhes from './Detalhes'; // Verifique se o arquivo se chama 'detalhes.jsx' ou 'Detalhes.jsx'
+import Detalhes from './detalhes'; // Verifique se o arquivo se chama 'detalhes.jsx' ou 'Detalhes.jsx'
 import Favoritos from './Favoritos';
 import CadastroVaga from './CadastroVaga'; 
+import CadastraCurso from './CadastraCurso'; 
 
 export default function Rotas() {
   return (
@@ -18,6 +19,7 @@ export default function Rotas() {
       <Route path="/vaga/:id" element={<Detalhes />} />
       <Route path="/favoritos" element={<Favoritos />} />
       <Route path="/cadastrovaga" element={<CadastroVaga />} />
+      <Route path="/cadastracurso" element={<CadastraCurso />} />
     </Routes>
   );
 }

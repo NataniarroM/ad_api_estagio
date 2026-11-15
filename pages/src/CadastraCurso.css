@@ -1,0 +1,79 @@
+.pagina-cadastra-curso {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.conteudo-cadastra-curso {
+  display: flex;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+.cartao-cadastra-curso {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.cartao-cadastra-curso h2 {
+  margin: 0 0 20px;
+  color: #111827;
+}
+
+.formulario-curso {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formulario-curso label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.formulario-curso input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.formulario-curso button {
+  margin-top: 6px;
+  padding: 11px;
+  background-color: #c2410c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.formulario-curso button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.mensagem-alerta {
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.mensagem-alerta.sucesso {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.mensagem-alerta.erro {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
