@@ -71,7 +71,7 @@ def test_login_email_invalido(page: Page):
 def test_senhas_diferentes_nao_enviam_cadastro(page: Page):
     simular_cursos(
         page,
-        [{"id": 1, "nome": "Administração"}]
+        [{"id_curso": 1, "nome": "Administração"}]
     )
 
     envios = []

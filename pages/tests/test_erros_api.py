@@ -29,7 +29,7 @@ def preparar_cadastro(page):
         f"{API}/api/cursos",
         lambda route: resposta_simulada(
             route, 200,
-            [{"id": 1, "nome": "Administração"}]
+            [{"id_curso": 1, "nome": "Administração"}]
         )
     )
 

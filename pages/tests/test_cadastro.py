@@ -22,7 +22,7 @@ def simular_cursos(page):
                 content_type="application/json",
                 headers={"Access-Control-Allow-Origin": "*"},
                 body=json.dumps([
-                    {"id": 1, "nome": "Administração"}
+                    {"id_curso": 1, "nome": "Administração"}
                 ])
             )
 

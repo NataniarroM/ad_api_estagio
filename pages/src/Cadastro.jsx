@@ -123,11 +123,13 @@ export default function Cadastro() {
                   required
                 >
                   <option value="">-- Selecione o seu curso --</option>
-                  {cursos.map((curso) => (
-                    <option key={curso.id} value={curso.id}>
-                      ID: {curso.id} - {curso.nome}
-                    </option>
-                  ))}
+                  
+              {cursos.map((curso) => (
+                  <option key={curso.id_curso} value={curso.id_curso}>
+                ID: {curso.id_curso} - {curso.nome}
+                 </option>
+                    ))}
+
                 </select>
               </div>
             </div>
