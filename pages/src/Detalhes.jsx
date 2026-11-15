@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
-import './detalhes.css';
+import './Detalhes.css';
 
 export default function Detalhes() {
   const { id } = useParams();
@@ -12,6 +12,52 @@ export default function Detalhes() {
   const [erro, setErro] = useState(null);
   const [inscrito, setInscrito] = useState(false);
   const [carregandoInscricao, setCarregandoInscricao] = useState(false);
+  const [administrador, setAdministrador] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+  const [erroExclusao, setErroExclusao] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+    let ativo = true;
+    fetch('http://localhost:8000/auth/perfil', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((resposta) => resposta.ok ? resposta.json() : null)
+      .then((perfil) => {
+        if (ativo) setAdministrador(perfil?.tipo_usuario === 'administrador');
+      })
+      .catch(() => {
+        if (ativo) setAdministrador(false);
+      });
+    return () => { ativo = false; };
+  }, []);
+
+  const excluirVaga = async () => {
+    if (!administrador || excluindo) return;
+    if (!window.confirm(`Excluir a vaga "${vaga.titulo}"? Essa ação não pode ser desfeita.`)) return;
+    setExcluindo(true);
+    setErroExclusao('');
+    try {
+      const resposta = await fetch(`http://localhost:8000/api/vagas/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+      });
+      if (!resposta.ok) {
+        if (resposta.status === 401) {
+          navigate('/login');
+          return;
+        }
+        const dados = await resposta.json().catch(() => ({}));
+        throw new Error(dados.detail || 'Não foi possível excluir a vaga. Tente novamente.');
+      }
+      navigate('/', { replace: true });
+    } catch (erro) {
+      setErroExclusao(erro.message);
+    } finally {
+      setExcluindo(false);
+    }
+  };
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/vagas/${id}`)
@@ -127,6 +173,15 @@ export default function Detalhes() {
         </div>
 
         <hr className="divisor" />
+
+        {administrador && (
+          <div className="acoes-admin-vaga">
+            <button type="button" className="botao-excluir-vaga" onClick={excluirVaga} disabled={excluindo}>
+              {excluindo ? 'Excluindo...' : 'Excluir vaga'}
+            </button>
+            {erroExclusao && <p className="texto-erro" role="alert">{erroExclusao}</p>}
+          </div>
+        )}
 
         <div className="corpo-vaga">
           <section className="secao-info">
