@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // 1. Importar o useNavigate
 import Cabecalho from './components/Cabecalho';
 import CartaoVaga from './components/CartaoVaga';
 import './App.css';
+
 import lupa from './assets/lupa.png';
 import pin from './assets/pin.png';
 import fav from './assets/favoritos.png';
@@ -42,18 +44,25 @@ export default function App() {
     <div className="pagina-principal">
       <Cabecalho />
 
-      {/* Banner / Pesquisa */}
       <section className="secao-topo">
         <h1 className="titulo-principal">
-          Encontre seu<br />próximo estágio
+          Encontre seu
+          <span className="titulo-destaque">
+            próximo estágio
+          </span>
         </h1>
+
         <p className="subtitulo-principal">
           Conectando estudantes a grandes oportunidades.
         </p>
 
-        <div className="barra-pesquisa">
+        <form
+          className="barra-pesquisa"
+          onSubmit={aplicarBusca}
+        >
           <div className="grupo-input">
             <img src={lupa} alt="Buscar" />
+
             <input
               type="text"
               className="campo-texto"
@@ -62,9 +71,12 @@ export default function App() {
               onChange={(e) => setTermoBusca(e.target.value)}
             />
           </div>
+
           <div className="separador" />
+
           <div className="grupo-input">
             <img src={pin} alt="Local" />
+
             <input
               type="text"
               className="campo-texto"
@@ -73,8 +85,11 @@ export default function App() {
               onChange={(e) => setLocalBusca(e.target.value)}
             />
           </div>
-          <button className="botao-buscar">Buscar</button>
-        </div>
+
+          <button type="submit" className="botao-buscar">
+            Buscar
+          </button>
+        </form>
       </section>
       <div className='bar'>
       <button className="botao-favorito" onClick={irParaFavoritos} title="Ver Favoritos">
@@ -88,7 +103,10 @@ export default function App() {
       <main className="secao-conteudo">
         <div className="cabecalho-secao">
           <h2 className="titulo-secao">
-            Vagas encontradas <span className="badge-contador">{vagas.length} vagas</span>
+            Vagas encontradas{' '}
+            <span className="badge-contador">
+              {vagasFiltradas.length} vagas
+            </span>
           </h2>
         </div>
 
@@ -98,8 +116,11 @@ export default function App() {
           </p>
         ) : (
           <div className="grade-vagas">
-            {/* 3. A key única foi adicionada aqui para corrigir o aviso do console */}
+<<<<<<< Updated upstream
             {vagas.map((item) => (
+=======
+            {vagasFiltradas.map((item) => (
+>>>>>>> Stashed changes
               <CartaoVaga key={item.id_vaga || item.id} vaga={item} />
             ))}
           </div>

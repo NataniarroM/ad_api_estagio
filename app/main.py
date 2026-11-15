@@ -1,6 +1,7 @@
 # os: usado para conferir se o arquivo de credenciais existe.
 import os
-from app.routers import vagas_router
+from app.seed import executar_seed
+from app.routers import vagas_router, cursos_router
 # asynccontextmanager: permite criar a função "lifespan" abaixo,
 # que roda código quando a API LIGA (e quando DESLIGA).
 from contextlib import asynccontextmanager
@@ -30,6 +31,8 @@ async def lifespan(app: FastAPI):
         # Os endpoints de cadastro e login responderão com erro explicando o problema.
         print("AVISO: arquivo de credenciais do Firebase não encontrado. "
               "Cadastro e login não vão funcionar.")
+
+    executar_seed()   # cria cursos e admin iniciais, se ainda não existirem
     yield
 
 
@@ -50,6 +53,7 @@ app.add_middleware(
 # Sem esta linha, as rotas /auth/... não existiriam.
 app.include_router(auth_router.router)
 app.include_router(vagas_router.router, prefix="/api")
+app.include_router(cursos_router.router, prefix="/api")  # /api/cursos
 app.include_router(candidatura_router.router)
 app.include_router(empresas_router.router)
 
