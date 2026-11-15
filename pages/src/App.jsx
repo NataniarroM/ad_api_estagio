@@ -14,6 +14,8 @@ export default function App() {
   const navigate = useNavigate();
   const [termoBusca, setTermoBusca] = useState('');
   const [localBusca, setLocalBusca] = useState('');
+  const [filtroTermo, setFiltroTermo] = useState('');
+  const [filtroLocal, setFiltroLocal] = useState('');
   const [vagas, setVagas] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [tipoUsuario, setTipoUsuario] = useState(
@@ -24,13 +26,19 @@ export default function App() {
 
   useEffect(() => {
     fetch(`${API_URL}/api/vagas/`)
-      .then((resposta) => resposta.json())
+      .then((resposta) => {
+        if (!resposta.ok) {
+          throw new Error(`Erro ${resposta.status} ao buscar vagas`);
+        }
+        return resposta.json();
+      })
       .then((dados) => {
         setVagas(Array.isArray(dados) ? dados : []);
         setCarregando(false);
       })
       .catch((erro) => {
         console.error('Erro ao carregar as vagas:', erro);
+        setVagas([]);
         setCarregando(false);
       });
   }, []);
@@ -56,6 +64,27 @@ export default function App() {
       .catch((erro) => console.error('Erro ao verificar perfil:', erro));
   }, []);
 
+  const aplicarBusca = (e) => {
+    e.preventDefault();
+    setFiltroTermo(termoBusca.trim().toLowerCase());
+    setFiltroLocal(localBusca.trim().toLowerCase());
+  };
+
+  const vagasFiltradas = vagas.filter((vaga) => {
+    const nomeEmpresa =
+      typeof vaga.empresa === 'object' && vaga.empresa !== null
+        ? vaga.empresa.nome || ''
+        : vaga.empresa || '';
+
+    const textoVaga = `${vaga.titulo || ''} ${nomeEmpresa} ${vaga.descricao || ''}`.toLowerCase();
+    const localVaga = `${vaga.local || ''} ${vaga.cidade || ''} ${vaga.estado || ''}`.toLowerCase();
+
+    const bateTermo = !filtroTermo || textoVaga.includes(filtroTermo);
+    const bateLocal = !filtroLocal || localVaga.includes(filtroLocal);
+
+    return bateTermo && bateLocal;
+  });
+
   const ehAdmin = tipoUsuario === 'administrador' || tipoUsuario === 'adm';
   const ehRecrutador = tipoUsuario === 'recrutador';
   const podeCadastrarVaga = ehRecrutador || ehAdmin;
@@ -76,17 +105,18 @@ export default function App() {
       <Cabecalho />
 
       <section className="secao-topo">
-        
-      
-       <h1 className="titulo-principal">
-        Encontre seu
-      <span className="titulo-destaque">
-        próximo estágio
-      </span>
-      </h1>
+        <h1 className="titulo-principal">
+<<<<<<< Updated upstream
+          Encontre seu<br />próximo estágio
+        </h1>
+=======
+          Encontre seu
+          <span className="titulo-destaque">
+            próximo estágio
+          </span>
+        </h1>
 
-
-
+>>>>>>> Stashed changes
         <p className="subtitulo-principal">
           Conectando estudantes a grandes oportunidades.
         </p>
@@ -173,8 +203,11 @@ export default function App() {
           </p>
         ) : (
           <div className="grade-vagas">
-            {/* 3. A key única foi adicionada aqui para corrigir o aviso do console */}
+<<<<<<< Updated upstream
             {vagas.map((item) => (
+=======
+            {vagasFiltradas.map((item) => (
+>>>>>>> Stashed changes
               <CartaoVaga key={item.id_vaga || item.id} vaga={item} />
             ))}
           </div>
