@@ -98,52 +98,40 @@ def cadastrar(dados: CadastroEntrada, db: Session = Depends(get_db)):
             detail="Erro ao criar o usuário no Firebase",
         )
 
+        # ---------- Salva o usuário também no banco (Postgres) ----------
+    # Até aqui o usuário só existe no Firebase. Agora criamos o "perfil" dele na
+    # tabela usuario, guardando o firebase_uid para ligar os dois cadastros.
     novo_usuario_db = Usuario(
         firebase_uid=usuario_fb.uid,
-        id_curso=dados.id_curso,
+        id_curso=dados.id_curso,                 # opcional: pode ser None (sem curso)
         nome=dados.nome,
         email=dados.email,
-        senha_hash="GERENCIADO_PELO_FIREBASE",
+        senha_hash="GERENCIADO_PELO_FIREBASE",   # a senha de verdade fica só no Firebase
         tipo_usuario=dados.tipo_usuario,
         telefone=dados.telefone,
         semestre=dados.semestre,
-        aluno=(dados.tipo_usuario == "estudante"),
     )
 
-    db.add(novo_usuario_db)
+    db.add(novo_usuario_db)                      # coloca na fila para salvar
     try:
-        db.commit()
-        db.refresh(novo_usuario_db)
+        db.commit()                              # grava de verdade no banco
+        db.refresh(novo_usuario_db)              # recarrega para pegar o id_usuario gerado
     except IntegrityError:
-        db.rollback()
-        auth.delete_user(usuario_fb.uid)
+        # O banco recusou: e-mail repetido ou id_curso que não existe.
+        db.rollback()                            # cancela a gravação
+        auth.delete_user(usuario_fb.uid)         # desfaz o usuário criado no Firebase
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Erro ao salvar usuário no banco (e-mail duplicado ou id_curso inexistente).",
         )
-
-    novo_usuario_db = Usuario(
-        firebase_uid=usuario_fb.uid,
-        id_curso=dados.id_curso,
-        nome=dados.nome,
-        email=dados.email,
-        senha_hash="GERENCIADO_PELO_FIREBASE",
-        tipo_usuario=dados.tipo_usuario,
-        telefone=dados.telefone,
-        semestre=dados.semestre,
-        aluno=(dados.tipo_usuario == "usuario"),
-    )
-
-    db.add(novo_usuario_db)
-    try:
-        db.commit()
-        db.refresh(novo_usuario_db)
-    except IntegrityError:
+    except Exception:
+        # Qualquer outro problema ao salvar (ex: banco fora do ar): desfaz o usuário
+        # no Firebase, para ninguém ficar "meio cadastrado" (só no Firebase).
         db.rollback()
         auth.delete_user(usuario_fb.uid)
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Erro ao salvar usuário no banco (e-mail duplicado ou id_curso inexistente).",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao salvar o usuário no banco de dados.",
         )
 
     return {
