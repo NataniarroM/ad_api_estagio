@@ -1,59 +1,79 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Cadastro.css';
 import Cabecalho from './components/Cabecalho';
 
 export default function Cadastro() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
-    nome: '', email: '', senha: '', confirmarSenha: '', telefone: '', semestre: '', id_curso: ''
+    nome: '',
+    email: '',
+    senha: '',
+    telefone: '',
+    semestre: '',
+    id_curso: '',
   });
   const [tipoConta, setTipoConta] = useState('usuario');
   const [cursos, setCursos] = useState([]);
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
-  // Busca os cursos na API para preencher a barra de rolagem
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/cursos')
-      .then(res => res.ok ? res.json() : [])
-      .then(data => setCursos(data))
-      .catch(err => console.error('Erro ao buscar cursos:', err));
+    fetch('http://localhost:8000/api/cursos')
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setCursos(Array.isArray(data) ? data : []))
+      .catch(() => setCursos([]));
   }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const selecionarTipoConta = (tipo) => {
+    setTipoConta(tipo);
+    if (tipo !== 'usuario') {
+      setForm((prev) => ({ ...prev, semestre: '', id_curso: '' }));
+    }
+  };
+
   const aoEnviarCadastro = async (e) => {
     e.preventDefault();
-    if (form.senha !== form.confirmarSenha) {
-      return setMensagem({ tipo: 'erro', texto: 'As senhas não coincidem.' });
+
+    if (form.senha.length < 6) {
+      return setMensagem({ tipo: 'erro', texto: 'A senha deve ter no mínimo 6 caracteres.' });
     }
 
     setCarregando(true);
     setMensagem({ tipo: '', texto: '' });
 
+    const ehAluno = tipoConta === 'usuario';
+
     try {
-      const resposta = await fetch('http://127.0.0.1:8000/auth/cadastro', {
+      const resposta = await fetch('http://localhost:8000/auth/cadastro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nome: form.nome,
-          email: form.email,
+          nome: form.nome.trim(),
+          email: form.email.trim(),
           senha: form.senha,
-          tipo: tipoConta,
-          // Convertendo telefone e semestre para números inteiros (int) conforme o seu back-end exige
-          telefone: form.telefone ? Number(form.telefone) : null,
-          semestre: form.semestre ? Number(form.semestre) : null,
-          id_curso: form.id_curso ? Number(form.id_curso) : null,
+          tipo_usuario: tipoConta,
+          telefone: form.telefone ? String(form.telefone).trim() : null,
+          semestre: ehAluno && form.semestre ? Number(form.semestre) : null,
+          id_curso: ehAluno && form.id_curso ? Number(form.id_curso) : null,
         }),
       });
 
+      const dados = await resposta.json().catch(() => ({}));
+
       if (resposta.ok) {
-        setMensagem({ tipo: 'sucesso', texto: 'Conta criada com sucesso!' });
-        setForm({ nome: '', email: '', senha: '', confirmarSenha: '', telefone: '', semestre: '', id_curso: '' });
+        setMensagem({ tipo: 'sucesso', texto: 'Conta criada com sucesso! Redirecionando...' });
+        setForm({ nome: '', email: '', senha: '', telefone: '', semestre: '', id_curso: '' });
+        setTimeout(() => navigate('/login'), 1500);
       } else {
-        const dadosErro = await resposta.json();
-        setMensagem({ tipo: 'erro', texto: dadosErro.detail || 'Erro ao realizar o cadastro.' });
+        const detalhe = Array.isArray(dados.detail)
+          ? dados.detail.map((d) => d.msg).join(', ')
+          : dados.detail;
+        setMensagem({ tipo: 'erro', texto: detalhe || 'Erro ao realizar o cadastro.' });
       }
     } catch (erro) {
       setMensagem({ tipo: 'erro', texto: 'Não foi possível conectar ao servidor.' });
@@ -61,6 +81,13 @@ export default function Cadastro() {
       setCarregando(false);
     }
   };
+
+  const camposGerais = [
+    { label: 'Nome Completo', name: 'nome', type: 'text', placeholder: 'Digite o seu nome', obrigatorio: true },
+    { label: 'E-mail', name: 'email', type: 'email', placeholder: 'exemplo@email.com', obrigatorio: true },
+    { label: 'Senha', name: 'senha', type: 'password', placeholder: 'Mínimo de 6 caracteres', obrigatorio: true },
+    { label: 'Telefone (Apenas números)', name: 'telefone', type: 'tel', placeholder: 'Ex: 11988888888', obrigatorio: false },
+  ];
 
   return (
     <div className="pagina-cadastro">
@@ -76,7 +103,7 @@ export default function Cadastro() {
                 key={tipo}
                 type="button"
                 className={`botao-tipo ${tipoConta === tipo ? 'ativo' : ''}`}
-                onClick={() => setTipoConta(tipo)}
+                onClick={() => selecionarTipoConta(tipo)}
               >
                 {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
               </button>
@@ -88,14 +115,7 @@ export default function Cadastro() {
           )}
 
           <form onSubmit={aoEnviarCadastro} className="formulario-cadastro">
-            {[
-              { label: 'Nome Completo', name: 'nome', type: 'text', placeholder: 'Digite o seu nome' },
-              { label: 'E-mail', name: 'email', type: 'email', placeholder: 'exemplo@email.com' },
-              { label: 'Senha', name: 'senha', type: 'password', placeholder: 'Mínimo de 6 caracteres' },
-              { label: 'Confirmar Senha', name: 'confirmarSenha', type: 'password', placeholder: 'Repita a sua senha' },
-              { label: 'Telefone (Apenas números)', name: 'telefone', type: 'number', placeholder: 'Ex: 11988888888' },
-              { label: 'Semestre (Apenas números)', name: 'semestre', type: 'number', placeholder: 'Ex: 3' },
-            ].map((campo) => (
+            {camposGerais.map((campo) => (
               <div className="grupo-campo" key={campo.name}>
                 <label className="rotulo-campo">{campo.label}</label>
                 <div className="caixa-campo">
@@ -106,31 +126,49 @@ export default function Cadastro() {
                     placeholder={campo.placeholder}
                     value={form[campo.name]}
                     onChange={handleChange}
-                    required
+                    required={campo.obrigatorio}
                   />
                 </div>
               </div>
             ))}
 
-            <div className="grupo-campo">
-              <label className="rotulo-campo">Curso</label>
-              <div className="caixa-campo">
-                <select
-                  name="id_curso"
-                  className="campo-texto"
-                  value={form.id_curso}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">-- Selecione o seu curso --</option>
-                  {cursos.map((curso) => (
-                    <option key={curso.id} value={curso.id}>
-                      ID: {curso.id} - {curso.nome}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            {tipoConta === 'usuario' && (
+              <>
+                <div className="grupo-campo">
+                  <label className="rotulo-campo">Semestre (Apenas números)</label>
+                  <div className="caixa-campo">
+                    <input
+                      type="number"
+                      name="semestre"
+                      className="campo-texto"
+                      placeholder="Ex: 3"
+                      value={form.semestre}
+                      onChange={handleChange}
+                      min={1}
+                    />
+                  </div>
+                </div>
+
+                <div className="grupo-campo">
+                  <label className="rotulo-campo">Curso (Opcional)</label>
+                  <div className="caixa-campo">
+                    <select
+                      name="id_curso"
+                      className="campo-texto"
+                      value={form.id_curso}
+                      onChange={handleChange}
+                    >
+                      <option value="">-- Selecione o seu curso --</option>
+                      {cursos.map((curso) => (
+                        <option key={curso.id_curso || curso.id} value={curso.id_curso || curso.id}>
+                          {curso.nome}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </>
+            )}
 
             <button type="submit" className="botao-cadastrar" disabled={carregando}>
               {carregando ? 'Criando conta...' : 'Cadastrar'}
@@ -139,7 +177,7 @@ export default function Cadastro() {
 
           <div className="rodape-card">
             <span>Já tem uma conta? </span>
-            <a href="/login" className="link-entrar">Entrar</a>
+            <Link to="/login" className="link-entrar">Entrar</Link>
           </div>
         </div>
       </main>

@@ -138,3 +138,19 @@
   width: 100%;
   text-align: center;
 }
+
+.mensagem-carregando {
+  text-align: center;
+  margin-top: 50px;
+  color: #666;
+}
+
+.container-vaga.estado-erro {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.texto-erro {
+  color: #ef4444;
+  margin-bottom: 20px;
+}

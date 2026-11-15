@@ -10,72 +10,73 @@ export default function Login() {
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
- const API_URL = 'http://localhost:8000'; // ajuste para a porta correta
+  const API_URL = 'http://localhost:8000';
 
-const aoEnviarLogin = async (e) => {
-  e.preventDefault();
-  setCarregando(true);
-  setMensagem({ tipo: '', texto: '' });
+  const aoEnviarLogin = async (e) => {
+    e.preventDefault();
+    setCarregando(true);
+    setMensagem({ tipo: '', texto: '' });
 
-  try {
-    const resposta = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, senha }),
-    });
-
-    let dados = {};
     try {
-      dados = await resposta.json();
-    } catch {
-      /* resposta sem JSON */
-    }
+      const resposta = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, senha }),
+      });
 
-    if (!resposta.ok) {
-      const detalhe = Array.isArray(dados.detail)
-        ? dados.detail.map((d) => d.msg).join(', ')
-        : dados.detail;
-      throw new Error(detalhe || `Erro ${resposta.status} ao fazer login.`);
-    }
-
-    const token = dados.access_token;
-    if (!token) throw new Error('O servidor não devolveu o token.');
-    localStorage.setItem('access_token', token);
-
-    const respostaPerfil = await fetch(`${API_URL}/auth/perfil`, {
-  headers: { Authorization: `Bearer ${token}` },
-});
-
-    if (!respostaPerfil.ok) {
-      throw new Error(`Erro ao carregar o perfil (status ${respostaPerfil.status}).`);
-    }
-
-    const dadosPerfil = await respostaPerfil.json();
-    const tipoUsuario = dadosPerfil.tipo_usuario;
-    localStorage.setItem('tipo_usuario', tipoUsuario);
-
-    setMensagem({ tipo: 'sucesso', texto: 'Login efetuado com sucesso!' });
-
-    setTimeout(() => {
-      if (tipoUsuario === 'recrutador' || tipoUsuario === 'usuario') {
-        navigate('/cadastrovaga');
-      } else {
-        navigate('/');
+      let dados = {};
+      try {
+        dados = await resposta.json();
+      } catch {
+        /* resposta sem JSON */
       }
-    }, 1000);
-  } catch (erro) {
-    console.error('Erro no login:', erro);
-    setMensagem({
-      tipo: 'erro',
-      texto:
-        erro instanceof TypeError
-          ? 'Não foi possível conectar ao servidor (verifique a porta e o CORS).'
-          : erro.message,
-    });
-  } finally {
-    setCarregando(false);
-  }
-};
+
+      if (!resposta.ok) {
+        const detalhe = Array.isArray(dados.detail)
+          ? dados.detail.map((d) => d.msg).join(', ')
+          : dados.detail;
+        throw new Error(detalhe || `Erro ${resposta.status} ao fazer login.`);
+      }
+
+      const token = dados.access_token;
+      if (!token) throw new Error('O servidor não devolveu o token.');
+      localStorage.setItem('access_token', token);
+
+      const respostaPerfil = await fetch(`${API_URL}/auth/perfil`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!respostaPerfil.ok) {
+        throw new Error(`Erro ao carregar o perfil (status ${respostaPerfil.status}).`);
+      }
+
+      const dadosPerfil = await respostaPerfil.json();
+      const tipoUsuario = dadosPerfil.tipo_usuario;
+      localStorage.setItem('tipo_usuario', tipoUsuario);
+
+      setMensagem({ tipo: 'sucesso', texto: 'Login efetuado com sucesso!' });
+
+      setTimeout(() => {
+        if (tipoUsuario === 'recrutador' || tipoUsuario === 'administrador') {
+          navigate('/cadastrovaga');
+        } else {
+          navigate('/');
+        }
+      }, 1000);
+    } catch (erro) {
+      console.error('Erro no login:', erro);
+      setMensagem({
+        tipo: 'erro',
+        texto:
+          erro instanceof TypeError
+            ? 'Não foi possível conectar ao servidor (verifique a porta e o CORS).'
+            : erro.message,
+      });
+    } finally {
+      setCarregando(false);
+    }
+  };
+
   return (
     <div className="pagina-login">
       <Cabecalho />
