@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import Candidaturas from './components/Candidaturas';
 import Cabecalho from './components/Cabecalho';
 import fundoPerfil from './assets/fundo-login-estagup.png';
 import './Perfil.css';
@@ -125,7 +126,10 @@ export default function Perfil() {
 
   const [rascunho, setRascunho] = useState(perfil);
   const [editando, setEditando] = useState(false);
-  const [menuAtivo, setMenuAtivo] = useState('pessoais');
+  const [parametros] = useSearchParams();
+  const [menuAtivo, setMenuAtivo] = useState(
+    () => parametros.get('aba') === 'candidaturas' ? 'candidaturas' : 'pessoais'
+  );
 
   const [mensagem, setMensagem] = useState({
     tipo: '',
@@ -758,7 +762,9 @@ export default function Perfil() {
               )}
 
               {/* OUTRAS SEÇÕES */}
+              {menuAtivo === 'candidaturas' && <Candidaturas />}
               {menuAtivo !== 'pessoais' &&
+                menuAtivo !== 'candidaturas' &&
                 menuAtivo !== 'curriculo' && (
 
                   <div className="conteudo-em-breve">

@@ -558,6 +558,43 @@
   border: 1px solid #fecaca;
 }
 
+.pagina-perfil .lista-candidaturas {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.pagina-perfil .cartao-candidatura {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #ecd8ce;
+  border-radius: 16px;
+  overflow-wrap: anywhere;
+}
+
+.pagina-perfil .cartao-candidatura h3 {
+  margin: 0 0 8px;
+  color: #291b17;
+}
+
+.pagina-perfil .cartao-candidatura p {
+  color: #71615a;
+}
+
+.pagina-perfil .situacao-candidatura {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f8eae2;
+  color: #88412f;
+  font-size: 13px;
+}
+
 /* =====================================
    RESPONSIVIDADE
    ===================================== */

@@ -146,6 +146,9 @@ def test_candidatura_com_sucesso(page: Page):
 
     assert len(requisicoes) == 1
     assert requisicoes[0] == {"id_vaga": 123}
+    expect(page.get_by_role("link", name="Ver minhas candidaturas")).to_have_attribute(
+        "href", "/perfil?aba=candidaturas"
+    )
 
 
 def test_candidatura_negada(page: Page):

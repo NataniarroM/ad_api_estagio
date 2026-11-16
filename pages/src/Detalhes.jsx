@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import './Detalhes.css';
 
@@ -224,6 +224,7 @@ export default function Detalhes() {
           {inscrito ? (
             <div className="mensagem-sucesso-inscricao">
               ✅ Candidatura realizada com sucesso! A empresa entrará em contacto em breve.
+              <p><Link to="/perfil?aba=candidaturas">Ver minhas candidaturas</Link></p>
             </div>
           ) : (
             <button
