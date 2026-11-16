@@ -89,7 +89,7 @@ export default function Detalhes() {
 
     setCarregandoInscricao(true);
     try {
-      const resposta = await fetch('http://localhost:8000/candidaturas/', {
+      const resposta = await fetch('http://localhost:8000/candidatura/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

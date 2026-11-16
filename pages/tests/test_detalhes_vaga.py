@@ -3,8 +3,8 @@ import json
 from playwright.sync_api import Page, expect
 
 URL = "http://localhost:5173/vaga/123"
-API_VAGA = "http://127.0.0.1:8000/api/vagas/123"
-API_CANDIDATURA = "http://127.0.0.1:8000/api/vagas/candidatar"
+API_VAGA = "http://localhost:8000/api/vagas/123"
+API_CANDIDATURA = "http://localhost:8000/candidatura/"
 
 VAGA = {
     "id_vaga": 123,
@@ -38,6 +38,11 @@ def responder(route, status, dados):
 
 
 def simular_vaga(page, status=200, dados=None):
+    page.add_init_script("localStorage.setItem('access_token', 'token-teste')")
+    page.route(
+        "http://localhost:8000/auth/perfil",
+        lambda route: responder(route, 200, {"tipo_usuario": "usuario"})
+    )
     if dados is None:
         dados = VAGA
 
@@ -117,6 +122,7 @@ def test_candidatura_com_sucesso(page: Page):
 
     def responder_candidatura(route):
         if route.request.method == "POST":
+            assert route.request.headers["authorization"] == "Bearer token-teste"
             requisicoes.append(
                 json.loads(route.request.post_data)
             )
@@ -139,7 +145,7 @@ def test_candidatura_com_sucesso(page: Page):
     ).to_be_visible()
 
     assert len(requisicoes) == 1
-    assert requisicoes[0]["vaga_id"] == 123
+    assert requisicoes[0] == {"id_vaga": 123}
 
 
 def test_candidatura_negada(page: Page):
@@ -168,5 +174,5 @@ def test_candidatura_negada(page: Page):
         ).click()
 
     assert mensagens == [
-        "Erro ao realizar candidatura. Tente novamente."
+        "Acesso negado"
     ]
